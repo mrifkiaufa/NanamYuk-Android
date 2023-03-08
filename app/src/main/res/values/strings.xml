@@ -12,9 +12,9 @@
     </string-array>
 
     <string-array name="data_urlPhoto">
-        <item>https://storage.googleapis.com/nanamyuk-bucket/tanah/tanah-pasir.jpg</item>
-        <item>https://storage.googleapis.com/nanamyuk-bucket/tanah/tanah-liat.jpg</item>
-        <item>https://storage.googleapis.com/nanamyuk-bucket/tanah/tanah-lempung.jpg</item>
+        <item>https://i.ibb.co/2tQH3kN/tanah-pasir.jpg</item>
+        <item>https://i.ibb.co/NyPrvvN/tanah-liat.jpg</item>
+        <item>https://i.ibb.co/2q3xdCN/tanah-lempung.jpg</item>
     </string-array>
 
     <string name="app_name">NanamYuk</string>
@@ -60,5 +60,5 @@
     <string name="penanda">Masukkan Nama Penanda</string>
     <string name="penanda_msg_2">Misal, Bayam Halaman Belakang</string>
     <string name="chekclist">chekclist</string>
-    <string name="time_splash">3000</string>
+    <string name="time_splash">1500</string>
 </resources>

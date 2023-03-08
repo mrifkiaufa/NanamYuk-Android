@@ -17,12 +17,12 @@ data class AuthResponse(
 )
 
 data class User(
-	@field:SerializedName("firstName")
-	val firstName: String,
-
-	@field:SerializedName("lastName")
-	val lastName: String,
+	@field:SerializedName("name")
+	val name: String,
 
 	@field:SerializedName("email")
 	val email: String,
+
+	@field:SerializedName("password")
+	val password: String,
 )

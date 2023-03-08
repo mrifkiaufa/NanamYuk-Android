@@ -1,5 +1,6 @@
 package com.irfan.nanamyuk.data.api
 
+import com.irfan.nanamyuk.WeatherResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -10,10 +11,22 @@ interface ServiceApi {
         @Body params: HashMap<String, String>
     ) : Call<AuthResponse>
 
+    @POST("auth/logout")
+    fun logout(
+        @Header("Authorization") header: String,
+    ) : Call<AuthResponse>
+
     @POST("auth/register")
     fun postRegister(
         @Body params: HashMap<String, String>
     ) : Call<AuthResponse>
+
+    @GET("weather")
+    fun getWeather(
+        @Query("lat") lat: String,
+        @Query("lon") lon: String,
+        @Query("appid") appid: String
+    ) : Call<WeatherResponse>
 
     @GET("Plant")
     fun getPlant(
@@ -36,11 +49,6 @@ interface ServiceApi {
         @Header("Authorization") header: String,
         @Body params: HashMap<String, Any>
     ) : Call<UserPlantsResponseItem>
-
-    @POST("auth/logout")
-    fun logout(
-        @Header("Authorization") header: String,
-    ) : Call<AuthResponse>
 
     @PATCH("UserPlants/{id}")
     fun updateUserPlants(

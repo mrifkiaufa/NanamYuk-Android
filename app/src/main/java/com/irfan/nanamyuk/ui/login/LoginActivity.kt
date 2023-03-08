@@ -67,6 +67,10 @@ class LoginActivity : AppCompatActivity() {
                     finish()
 
                     Toast.makeText(this, "Anda berhasil login", Toast.LENGTH_SHORT).show()
+                } else {
+                    loginViewModel.message.observe(this) { message ->
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

@@ -32,6 +32,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.math.roundToInt
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -59,10 +60,20 @@ class DashFragment : Fragment() {
 
         setupViewModel()
 
-        dashViewModel.getUserToken().observe(viewLifecycleOwner) {
-            binding.tvHalo.text = "Halo, " + it.name
-            dashViewModel.getUserPlants(it.token)
-            token = it.token
+        dashViewModel.getUserToken().observe(viewLifecycleOwner) { data ->
+            binding.tvHalo.text = "Halo, " + data.name
+            dashViewModel.getUserPlants(data.token)
+            token = data.token
+
+            dashViewModel.getWeather(data.lat, data.lon, APP_ID)
+            Log.e("weather", data.lat)
+            Log.e("weather", data.lon)
+            dashViewModel.weather.observe(viewLifecycleOwner) { weather ->
+                var temp = kelvinToCelcius(weather.main.temp)
+                temp = (temp * 100.0).roundToInt() / 100.0
+                dashViewModel.setTemperature(temp.toString())
+            }
+            Log.e("weather", data.temperature)
         }
 
         binding.btnPremium.setOnClickListener {
@@ -102,7 +113,7 @@ class DashFragment : Fragment() {
 
                 val dateUserPlant = formatDate(x.date, "dd MMM yyyy")
                 Log.e("plant date", dateUserPlant)
-                if (dateNow == dateUserPlant && x.state) {
+                if (dateNow == dateUserPlant && x.wateringState) {
                     val map = hashMapOf<String, Any>(
                         "State" to false
                     )
@@ -112,7 +123,7 @@ class DashFragment : Fragment() {
             }
 
             for (i in UserPlants) {
-                if (i.state) {
+                if (i.wateringState) {
                     finish.add(i)
                 } else {
                     notFinish.add(i)
@@ -201,6 +212,7 @@ class DashFragment : Fragment() {
         return formatter.format(instant)
     }
 
+    private fun kelvinToCelcius(kelvinTemp: Double): Double = kelvinTemp - 273.15
 
     private fun setupViewModel(){
         dashViewModel = ViewModelProvider(this, ViewModelFactory(SessionPreferences.getInstance(requireContext().dataStore)))[DashViewModel::class.java]
@@ -209,5 +221,9 @@ class DashFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val APP_ID = "6259b6ecf75fd6424dd3351f6db69f2a"
     }
 }

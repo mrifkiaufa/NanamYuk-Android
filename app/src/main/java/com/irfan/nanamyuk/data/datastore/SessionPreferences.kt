@@ -13,7 +13,10 @@ class SessionPreferences private constructor(private val dataStore: DataStore<Pr
             SessionModel(
                 preferences[TOKEN] ?: "",
                 preferences[NAME] ?: "",
-                preferences[ID] ?: ""
+                preferences[ID] ?: "",
+                preferences[LAT] ?: "",
+                preferences[LON] ?: "",
+                preferences[TEMP] ?: "",
             )
         }
     }
@@ -23,6 +26,19 @@ class SessionPreferences private constructor(private val dataStore: DataStore<Pr
             preferences[TOKEN] = token
             preferences[NAME] = name
             preferences[ID] = id
+        }
+    }
+
+    suspend fun postLatLon(lat: String, lon: String) {
+        dataStore.edit { preferences ->
+            preferences[LAT] = lat
+            preferences[LON] = lon
+        }
+    }
+
+    suspend fun postTemperature(temperature: String) {
+        dataStore.edit { preferences ->
+            preferences[TEMP] = temperature
         }
     }
 
@@ -39,6 +55,9 @@ class SessionPreferences private constructor(private val dataStore: DataStore<Pr
         private val TOKEN = stringPreferencesKey("token")
         private val NAME = stringPreferencesKey("name")
         private val ID = stringPreferencesKey("id")
+        private val LAT = stringPreferencesKey("lat")
+        private val LON = stringPreferencesKey("lon")
+        private val TEMP = stringPreferencesKey("temperature")
 
         fun getInstance(dataStore: DataStore<Preferences>): SessionPreferences {
             return INSTANCE ?: synchronized(this) {

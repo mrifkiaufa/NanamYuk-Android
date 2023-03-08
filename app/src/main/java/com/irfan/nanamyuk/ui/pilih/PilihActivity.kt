@@ -17,15 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.irfan.nanamyuk.HomeActivity
 import com.irfan.nanamyuk.adapter.PilihAdapter
 import com.irfan.nanamyuk.data.api.PlantResponseItem
-import com.irfan.nanamyuk.data.api.UserPlantsResponseItem
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
 import com.irfan.nanamyuk.databinding.ActivityPilihBinding
 import com.irfan.nanamyuk.ui.ViewModelFactory
 import com.irfan.nanamyuk.ui.dash.DashViewModel
-import com.irfan.nanamyuk.ui.subscription.SubscriptionActivity
 import com.parassidhu.simpledate.toZuluFormat
 import me.moallemi.tools.extension.date.now
-import javax.xml.transform.OutputKeys.METHOD
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -148,16 +145,20 @@ class PilihActivity : AppCompatActivity() {
             pilihViewModel.getUserToken().observe(this) {
 
                 namaPenanda = binding.tvPenanda.text.toString()
-                val user = listOf(it.id)
-                val plant = listOf(tanamanId)
-                val state = false
+                val user = it.id
+                val plant = tanamanId
+                val wateringState = false
+                val dryState = false
+                val humidState = false
 
-                val map = hashMapOf(
-                    "Date" to setTanggal(),
-                    "Nama Penanda" to namaPenanda,
-                    "User" to user,
-                    "Plant" to plant,
-                    "State" to state
+                val map: HashMap<String, Any> = hashMapOf(
+                    "date" to setTanggal(),
+                    "tag_name" to namaPenanda,
+                    "user" to user,
+                    "plant" to plant,
+                    "watering_state" to wateringState,
+                    "dry_state" to dryState,
+                    "humid_state" to humidState
                 )
 
 

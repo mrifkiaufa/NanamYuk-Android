@@ -35,9 +35,9 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (namaPenanda, plant, date, state, id) = datas[position]
+        val (namaPenanda, plant, date, wateringState, _, _, id) = datas[position]
 
-        if (state) {
+        if (wateringState) {
             holder.binding.fabWater.visibility = View.GONE
             holder.binding.check.visibility = View.VISIBLE
         }

@@ -4,48 +4,51 @@ import com.google.gson.annotations.SerializedName
 
 data class UserPlantsResponseItem(
 
-	@field:SerializedName("Nama Penanda")
+	@field:SerializedName("tag_name")
 	val namaPenanda: String,
 
-	@field:SerializedName("Plant")
+	@field:SerializedName("plant")
 	val plant: List<PlantItem>,
 
-	@field:SerializedName("Date")
+	@field:SerializedName("date")
 	val date: String,
 
-	@field:SerializedName("State")
-	val state: Boolean,
+	@field:SerializedName("watering_state")
+	val wateringState: Boolean,
 
-	@field:SerializedName("_id")
+	@field:SerializedName("dry_state")
+	val dryState: Boolean,
+
+	@field:SerializedName("humid_state")
+	val humidState: Boolean,
+
+	@field:SerializedName("id")
 	val id: String,
 
-	@field:SerializedName("User")
+	@field:SerializedName("user")
 	val user: List<UserItem>
 
 
 )
 
 data class PlantItem(
-	@field:SerializedName("Image")
+	@field:SerializedName("image")
 	val image: String,
 
-	@field:SerializedName("Nama Tanaman")
+	@field:SerializedName("plant_name")
 	val namaTanaman: String,
 
-	@field:SerializedName("Durasi Siram")
+	@field:SerializedName("watering_duration")
 	val durasiSiram: String,
 
-	@field:SerializedName("_id")
+	@field:SerializedName("user_id")
 	val id: String
 )
 
 data class UserItem(
-	@field:SerializedName("firstName")
-	val firstName: String,
+	@field:SerializedName("user_name")
+	val name: String,
 
-	@field:SerializedName("lastName")
-	val lastName: String,
-
-	@field:SerializedName("_id")
+	@field:SerializedName("plant_id")
 	val id: String,
 )

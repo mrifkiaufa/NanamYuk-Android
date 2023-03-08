@@ -18,6 +18,9 @@ class LoginViewModel(private val pref: SessionPreferences) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _message = MutableLiveData<String>()
+    val message: LiveData<String> = _message
+
     private val _state = MutableLiveData<Boolean>()
     val state: LiveData<Boolean> = _state
 
@@ -38,18 +41,22 @@ class LoginViewModel(private val pref: SessionPreferences) : ViewModel() {
 
                     viewModelScope.launch {
                         val token = response.body()?.token
-                        val name = response.body()?.user?.firstName
+                        val name = response.body()?.user?.name
                         val id = response.body()?.userId
 
                         if (token != null && name != null && id != null) {
                             pref.login(token, name, id)
                         }
                     }
+                } else {
+                    _state.value = false
+                    _message.value = "Email atau password yang anda masukkan salah"
                 }
             }
 
             override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                 _state.value = false
+                _message.value = t.message
             }
         })
     }

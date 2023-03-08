@@ -53,10 +53,9 @@ class DaftarActivity : AppCompatActivity() {
             val password = binding.passwordEditText.text.toString()
 
             val map = hashMapOf(
-                "firstName" to name,
-                "lastName" to "",
                 "email" to email,
-                "password" to password
+                "password" to password,
+                "name" to name,
             )
 
             daftarViewModel.postDaftar(map)

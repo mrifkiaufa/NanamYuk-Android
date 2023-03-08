@@ -43,6 +43,7 @@ class PilihViewModel(private val pref: SessionPreferences): ViewModel() {
                 _isLoading.value = false
 
                 if (response.isSuccessful) {
+                    //Log.e("fafifu", response.body().toString())
                     _plants.value = response.body()
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
