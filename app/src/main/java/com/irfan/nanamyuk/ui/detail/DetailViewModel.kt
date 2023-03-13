@@ -5,10 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.irfan.nanamyuk.data.api.ConfigApi
+import com.irfan.nanamyuk.data.api.*
 import com.irfan.nanamyuk.data.api.ConfigApi.Companion.BASE_URL
-import com.irfan.nanamyuk.data.api.PlantResponseItem
-import com.irfan.nanamyuk.data.api.UserPlantsResponseItem
 import com.irfan.nanamyuk.data.datastore.SessionModel
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
 import retrofit2.Call
@@ -16,8 +14,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DetailViewModel(private val pref: SessionPreferences) : ViewModel() {
-    private val _plants = MutableLiveData<PlantResponseItem>()
-    val plants: LiveData<PlantResponseItem> = _plants
+    private val _plant = MutableLiveData<PlantResponseItem>()
+    val plant: LiveData<PlantResponseItem> = _plant
 
     private val _isLoading = MutableLiveData<Boolean>()
 
@@ -28,23 +26,23 @@ class DetailViewModel(private val pref: SessionPreferences) : ViewModel() {
         return pref.getToken().asLiveData()
     }
 
-    fun getPlants(token: String, id: String){
+    fun getPlant(token: String, id: String){
         _isLoading.value = true
 
         val client = ConfigApi.getApiService(BASE_URL).getPlantById("Bearer $token", id)
-        client.enqueue(object : Callback<PlantResponseItem> {
-            override fun onResponse(call: Call<PlantResponseItem>, response: Response<PlantResponseItem>) {
+        client.enqueue(object : Callback<PlantResponse> {
+            override fun onResponse(call: Call<PlantResponse>, response: Response<PlantResponse>) {
                 _isLoading.value = false
 
                 if (response.isSuccessful) {
-                    _plants.value = response.body()
-                    Log.e("tes respon", _plants.toString())
+                    _plant.value = response.body()?.response
+                    Log.e("tes respon", _plant.toString())
 
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
-            override fun onFailure(call: Call<PlantResponseItem>, t: Throwable) {
+            override fun onFailure(call: Call<PlantResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure Throw: ${t.message}")
             }
@@ -56,10 +54,10 @@ class DetailViewModel(private val pref: SessionPreferences) : ViewModel() {
         _state.value = false
 
         val client = ConfigApi.getApiService(BASE_URL).deleteUserPlants("Bearer $token", id)
-        client.enqueue(object : Callback<UserPlantsResponseItem> {
+        client.enqueue(object : Callback<UserPlantResponse> {
             override fun onResponse(
-                call: Call<UserPlantsResponseItem>,
-                response: Response<UserPlantsResponseItem>
+                call: Call<UserPlantResponse>,
+                response: Response<UserPlantResponse>
             ) {
                 _isLoading.value = false
 
@@ -69,7 +67,7 @@ class DetailViewModel(private val pref: SessionPreferences) : ViewModel() {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
-            override fun onFailure(call: Call<UserPlantsResponseItem>, t: Throwable) {
+            override fun onFailure(call: Call<UserPlantResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure Throw: ${t.message}")
             }

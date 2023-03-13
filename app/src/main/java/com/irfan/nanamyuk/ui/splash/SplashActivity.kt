@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -27,6 +28,8 @@ import com.irfan.nanamyuk.R
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
 import com.irfan.nanamyuk.ui.ViewModelFactory
 import com.irfan.nanamyuk.ui.login.LoginActivity
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -138,7 +141,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun requestDeviceLocationSettings() {
-        val locationRequest = LocationRequest.create().apply {
+        @Suppress("DEPRECATION") val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -159,7 +162,7 @@ class SplashActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this,
-                        "Location is not found. Try Again",
+                        "Silakan membuka ulang aplikasi.",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -179,11 +182,31 @@ class SplashActivity : AppCompatActivity() {
                         this,
                         100
                     )
+
+                    Toast.makeText(
+                        this,
+                        "Silakan buka ulang aplikasi dengan menghidupkan lokasi",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
                 } catch (sendEx: IntentSender.SendIntentException) {
                     // Ignore the error.
                 }
             }
         }
 
+        if(!isLocationServiceEnabled(this)) {
+            @Suppress("DEPRECATION")
+            Handler().postDelayed({
+                val intent = Intent(this@SplashActivity, SplashActivity::class.java)
+                startActivity(intent)
+                finish()
+            }, 5000)
+        }
+    }
+
+    private fun isLocationServiceEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 }

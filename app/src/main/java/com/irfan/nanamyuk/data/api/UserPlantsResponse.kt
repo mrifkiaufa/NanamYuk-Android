@@ -2,13 +2,29 @@ package com.irfan.nanamyuk.data.api
 
 import com.google.gson.annotations.SerializedName
 
+data class UserPlantsResponse(
+	@field:SerializedName("response")
+	val response: List<UserPlantsResponseItem>,
+
+	@field:SerializedName("status")
+	val status: String,
+)
+
+data class UserPlantResponse(
+	@field:SerializedName("response")
+	val response: UserPlantsResponseItem,
+
+	@field:SerializedName("status")
+	val status: String,
+)
+
 data class UserPlantsResponseItem(
 
 	@field:SerializedName("tag_name")
 	val namaPenanda: String,
 
 	@field:SerializedName("plant")
-	val plant: List<PlantItem>,
+	val plant: PlantItem,
 
 	@field:SerializedName("date")
 	val date: String,
@@ -26,9 +42,7 @@ data class UserPlantsResponseItem(
 	val id: String,
 
 	@field:SerializedName("user")
-	val user: List<UserItem>
-
-
+	val user: UserItem
 )
 
 data class PlantItem(
@@ -41,7 +55,7 @@ data class PlantItem(
 	@field:SerializedName("watering_duration")
 	val durasiSiram: String,
 
-	@field:SerializedName("user_id")
+	@field:SerializedName("plant_id")
 	val id: String
 )
 
@@ -49,6 +63,6 @@ data class UserItem(
 	@field:SerializedName("user_name")
 	val name: String,
 
-	@field:SerializedName("plant_id")
+	@field:SerializedName("user_id")
 	val id: String,
 )

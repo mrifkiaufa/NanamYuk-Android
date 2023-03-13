@@ -1,6 +1,7 @@
 package com.irfan.nanamyuk.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,23 +36,34 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (namaPenanda, plant, date, wateringState, _, _, id) = datas[position]
+        val (namaPenanda, plant, date, wateringState, dryState, humidState, id) = datas[position]
 
         if (wateringState) {
             holder.binding.fabWater.visibility = View.GONE
             holder.binding.check.visibility = View.VISIBLE
         }
 
-        Glide.with(holder.itemView).load(plant[0].image).into(holder.binding.circleImageView)
+        if (dryState) {
+            holder.binding.fabSun.visibility = View.VISIBLE
+            holder.binding.fabCloud.visibility = View.GONE
+        }
+
+        if (humidState) {
+            holder.binding.fabCloud.visibility = View.VISIBLE
+            holder.binding.fabCloud.visibility = View.GONE
+        }
+
+        Glide.with(holder.itemView).load(plant.image).into(holder.binding.circleImageView)
         holder.binding.tvPenanda.text = namaPenanda
-        holder.binding.tvTanaman.text = plant[0].namaTanaman
+        holder.binding.tvTanaman.text = plant.namaTanaman
 
         holder.binding.tvDate.text = formatDate(date)
 
 
+        Log.e("Plant data", plant.toString())
         holder.binding.card.setOnClickListener {
             val i = Intent(holder.itemView.context, DetailActivity::class.java)
-            i.putExtra(ID, plant[0].id)
+            i.putExtra(ID, plant.id)
             i.putExtra(NAME, namaPenanda)
             i.putExtra(UID, id)
             holder.itemView.context.startActivity(i)
@@ -64,7 +76,7 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
                     holder.adapterPosition,
                     id,
                     date,
-                    plant[0].durasiSiram
+                    plant.durasiSiram
                 )
             }
         }

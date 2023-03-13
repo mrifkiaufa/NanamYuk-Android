@@ -41,6 +41,10 @@ class DashFragment : Fragment() {
     private var _binding: FragmentDashboardBinding? = null
     private lateinit var dashViewModel: DashViewModel
     private var token = ""
+    private var temp = 0.0
+
+    private var minPlantTemp = 0.0
+    private var maxPlantTemp = 0.0
 
     private val binding get() = _binding!!
 
@@ -66,14 +70,15 @@ class DashFragment : Fragment() {
             token = data.token
 
             dashViewModel.getWeather(data.lat, data.lon, APP_ID)
-            Log.e("weather", data.lat)
-            Log.e("weather", data.lon)
+
             dashViewModel.weather.observe(viewLifecycleOwner) { weather ->
                 var temp = kelvinToCelcius(weather.main.temp)
                 temp = (temp * 100.0).roundToInt() / 100.0
                 dashViewModel.setTemperature(temp.toString())
             }
-            Log.e("weather", data.temperature)
+
+            temp = data.temperature.toDouble()
+
         }
 
         binding.btnPremium.setOnClickListener {
@@ -107,26 +112,72 @@ class DashFragment : Fragment() {
             val notFinish = mutableListOf<UserPlantsResponseItem>()
             val finish = mutableListOf<UserPlantsResponseItem>()
 
-            for (x in UserPlants) {
-                val dateNow = now().toDateStandardConcise()
-                Log.e("date now", dateNow)
+            if(!UserPlants.isNullOrEmpty()) {
+                for (x in UserPlants) {
+                    val dateNow = now().toDateStandardConcise()
+                    Log.e("date now", dateNow)
 
-                val dateUserPlant = formatDate(x.date, "dd MMM yyyy")
-                Log.e("plant date", dateUserPlant)
-                if (dateNow == dateUserPlant && x.wateringState) {
-                    val map = hashMapOf<String, Any>(
-                        "State" to false
-                    )
+                    dashViewModel.getPlant(token, x.plant.id)
+                    dashViewModel.plant.observe(viewLifecycleOwner) { plant ->
+                        val plantTemps = plant.suhu.split("-")
 
-                    dashViewModel.updateUserPlants(token, map, x.id)
+                        minPlantTemp = plantTemps[0].toDouble()
+                        maxPlantTemp = plantTemps[1].toDouble()
+                    }
+
+//                    Log.e("Plant Temperature: ", minPlantTemp.toString())
+//                    Log.e("Plant Temperature: ", maxPlantTemp.toString())
+//                    Log.e("Temperature: ", temp.toString())
+
+                    if(temp > maxPlantTemp) {
+                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                            "date" to x.date,
+                            "tag_name" to x.namaPenanda,
+                            "user_id" to x.user.id,
+                            "plant_id" to x.plant.id,
+                            "watering_state" to x.wateringState,
+                            "dry_state" to x.dryState,
+                            "humid_state" to true
+                        )
+
+                        dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                    } else if (temp < minPlantTemp) {
+                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                            "date" to x.date,
+                            "tag_name" to x.namaPenanda,
+                            "user_id" to x.user.id,
+                            "plant_id" to x.plant.id,
+                            "watering_state" to x.wateringState,
+                            "dry_state" to true,
+                            "humid_state" to x.humidState
+                        )
+
+                        dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                    }
+
+                    val dateUserPlant = formatDate(x.date, "dd MMM yyyy")
+                    Log.e("plant date", dateUserPlant)
+                    if (dateNow == dateUserPlant && x.wateringState) {
+                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                            "date" to x.date,
+                            "tag_name" to x.namaPenanda,
+                            "user_id" to x.user.id,
+                            "plant_id" to x.plant.id,
+                            "watering_state" to false,
+                            "dry_state" to x.dryState,
+                            "humid_state" to x.humidState
+                        )
+
+                        dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                    }
                 }
-            }
 
-            for (i in UserPlants) {
-                if (i.wateringState) {
-                    finish.add(i)
-                } else {
-                    notFinish.add(i)
+                for (i in UserPlants) {
+                    if (i.wateringState) {
+                        finish.add(i)
+                    } else {
+                        notFinish.add(i)
+                    }
                 }
             }
 
@@ -167,12 +218,20 @@ class DashFragment : Fragment() {
                     date: String,
                     duration: String
                 ) {
-                    val map = hashMapOf<String, Any>(
-                        "State" to true,
-                        "Date" to setTanggal(date, duration)
-                    )
+                    dashViewModel.getUserPlant(token, id)
+                    dashViewModel.userPlant.observe(viewLifecycleOwner) { x ->
+                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                            "date" to setTanggal(date, duration),
+                            "tag_name" to x.namaPenanda,
+                            "user_id" to x.user.id,
+                            "plant_id" to x.plant.id,
+                            "watering_state" to true,
+                            "dry_state" to x.dryState,
+                            "humid_state" to x.humidState
+                        )
 
-                    dashViewModel.updateUserPlants(token, map, id)
+                        dashViewModel.updateUserPlants(token, userPlantMap, id)
+                    }
 
                     val i = Intent(activity, HomeActivity::class.java)
                     i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

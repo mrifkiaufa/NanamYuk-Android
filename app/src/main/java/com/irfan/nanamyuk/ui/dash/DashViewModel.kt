@@ -3,12 +3,12 @@ package com.irfan.nanamyuk.ui.dash
 import android.util.Log
 import androidx.lifecycle.*
 import com.irfan.nanamyuk.WeatherResponse
-import com.irfan.nanamyuk.data.api.ConfigApi
+import com.irfan.nanamyuk.data.api.*
 import com.irfan.nanamyuk.data.api.ConfigApi.Companion.BASE_OWM
 import com.irfan.nanamyuk.data.api.ConfigApi.Companion.BASE_URL
-import com.irfan.nanamyuk.data.api.UserPlantsResponseItem
 import com.irfan.nanamyuk.data.datastore.SessionModel
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
+import com.irfan.nanamyuk.ui.pilih.PilihViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,8 +18,17 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
     private val _userplants = MutableLiveData<List<UserPlantsResponseItem>>()
     val userplants: LiveData<List<UserPlantsResponseItem>> = _userplants
 
+    private val _userPlant = MutableLiveData<UserPlantsResponseItem>()
+    val userPlant: LiveData<UserPlantsResponseItem> = _userPlant
+
     private val _weather = MutableLiveData<WeatherResponse>()
     val weather: LiveData<WeatherResponse> = _weather
+
+    private val _session = MutableLiveData<SessionResponseItem>()
+    val session: LiveData<SessionResponseItem> = _session
+
+    private val _plant = MutableLiveData<PlantResponseItem>()
+    val plant: LiveData<PlantResponseItem> = _plant
 
     fun getUserToken(): LiveData<SessionModel> {
         return pref.getToken().asLiveData()
@@ -36,6 +45,50 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    fun getPlant(token: String, id: String){
+        _isLoading.value = true
+
+        val client = ConfigApi.getApiService(BASE_URL).getPlantById("Bearer $token", id)
+        client.enqueue(object : Callback<PlantResponse> {
+            override fun onResponse(call: Call<PlantResponse>, response: Response<PlantResponse>) {
+                _isLoading.value = false
+
+                if (response.isSuccessful) {
+                    //Log.e("fafifu", response.body().toString())
+                    _plant.value = response.body()?.response
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+            override fun onFailure(call: Call<PlantResponse>, t: Throwable) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure Throw: ${t.message}")
+            }
+        })
+    }
+
+    fun getSession(id: String, token: String){
+        _isLoading.value = true
+
+        val client = ConfigApi.getApiService(BASE_URL).getSession("Bearer $token", id)
+        client.enqueue(object : Callback<SessionResponse> {
+            override fun onResponse(call: Call<SessionResponse>, response: Response<SessionResponse>) {
+                _isLoading.value = false
+
+                if (response.isSuccessful) {
+                    //Log.e("fafifu", response.body().toString())
+                    _session.value = response.body()?.response
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+            override fun onFailure(call: Call<SessionResponse>, t: Throwable) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure Throw: ${t.message}")
+            }
+        })
+    }
 
     fun getWeather(lat: String, lon: String, appid: String) {
         _isLoading.value = true
@@ -62,17 +115,19 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
         _isLoading.value = true
 
         val client = ConfigApi.getApiService(BASE_URL).getUserPlants("Bearer $token")
-        client.enqueue(object : Callback<List<UserPlantsResponseItem>> {
-            override fun onResponse(call: Call<List<UserPlantsResponseItem>>, response: Response<List<UserPlantsResponseItem>>) {
+        client.enqueue(object : Callback<UserPlantsResponse> {
+            override fun onResponse(call: Call<UserPlantsResponse>, response: Response<UserPlantsResponse>) {
                 _isLoading.value = false
 
                 if (response.isSuccessful) {
-                    _userplants.value = response.body()
+                    if(!response.body()?.response.isNullOrEmpty()){
+                        _userplants.value = response.body()?.response
+                    }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
-            override fun onFailure(call: Call<List<UserPlantsResponseItem>>, t: Throwable) {
+            override fun onFailure(call: Call<UserPlantsResponse>, t: Throwable) {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure Throw: ${t.message}")
             }
@@ -83,21 +138,42 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
         _state.value = false
 
         val client = ConfigApi.getApiService(BASE_URL).updateUserPlants("Bearer $token", id, map)
-        client.enqueue(object : Callback<UserPlantsResponseItem> {
+        client.enqueue(object : Callback<UserPlantResponse> {
             override fun onResponse(
-                call: Call<UserPlantsResponseItem>,
-                response: Response<UserPlantsResponseItem>
+                call: Call<UserPlantResponse>,
+                response: Response<UserPlantResponse>
             ) {
                 if (response.isSuccessful){
                     _state.value = true
-
                 }
             }
 
-            override fun onFailure(call: Call<UserPlantsResponseItem>, t: Throwable) {
+            override fun onFailure(call: Call<UserPlantResponse>, t: Throwable) {
                 Log.e(TAG, "onFailure Throw: ${t.message}")
             }
 
+        })
+    }
+
+    fun getUserPlant(token: String, id: String){
+        _isLoading.value = true
+
+        val client = ConfigApi.getApiService(BASE_URL).getUserPlant("Bearer $token", id)
+        client.enqueue(object : Callback<UserPlantResponse> {
+            override fun onResponse(call: Call<UserPlantResponse>, response: Response<UserPlantResponse>) {
+                _isLoading.value = false
+
+                if (response.isSuccessful) {
+                    //Log.e("fafifu", response.body().toString())
+                    _userPlant.value = response.body()?.response
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+            override fun onFailure(call: Call<UserPlantResponse>, t: Throwable) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure Throw: ${t.message}")
+            }
         })
     }
 

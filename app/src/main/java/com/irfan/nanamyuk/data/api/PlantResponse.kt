@@ -2,6 +2,22 @@ package com.irfan.nanamyuk.data.api
 
 import com.google.gson.annotations.SerializedName
 
+data class PlantsResponse(
+	@field:SerializedName("response")
+	val response: List<PlantResponseItem>,
+
+	@field:SerializedName("status")
+	val status: String,
+)
+
+data class PlantResponse(
+	@field:SerializedName("response")
+	val response: PlantResponseItem,
+
+	@field:SerializedName("status")
+	val status: String,
+)
+
 data class PlantResponseItem(
 	@field:SerializedName("name")
 	val namaTanaman: String,

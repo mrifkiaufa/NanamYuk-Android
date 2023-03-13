@@ -47,23 +47,23 @@ class DetailActivity : AppCompatActivity() {
 
     private fun setupAction(id : String, name : String, uid: String) {
         detailViewModel.getUserToken().observe(this) {
-            detailViewModel.getPlants(it.token, id)
+            detailViewModel.getPlant(it.token, id)
             token = it.token
         }
 
-        detailViewModel.plants.observe(this){ plants ->
-            Glide.with(this).load(plants.image).into(binding.imagePlant)
+        detailViewModel.plant.observe(this){ plant ->
+            Glide.with(this).load(plant.image).into(binding.imagePlant)
             binding.apply {
                 plantTag.text = name
-                plantName.text = plants.namaTanaman
-                textTemperature.text = plants.suhu
-                textKelembapan.text = plants.kelembapan
-                textRainfall.text = plants.rainfall
-                textTanah.text = plants.tanah
-                textCahaya.text = plants.cahaya
-                textDurasi.text = plants.durasiSiram
-                textDeskripsi.text = plants.deskripsi
-                textTutorial.text = plants.tutorial
+                plantName.text = plant.namaTanaman
+                textTemperature.text = plant.suhu
+                textKelembapan.text = plant.kelembapan
+                textRainfall.text = plant.rainfall
+                textTanah.text = plant.tanah
+                textCahaya.text = plant.cahaya
+                textDurasi.text = plant.durasiSiram
+                textDeskripsi.text = plant.deskripsi
+                textTutorial.text = plant.tutorial
             }
         }
 
