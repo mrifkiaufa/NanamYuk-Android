@@ -25,6 +25,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var binding : ActivityDetailBinding
     private lateinit var detailViewModel: DetailViewModel
     private var token = ""
+    private var sessionId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,19 @@ class DetailActivity : AppCompatActivity() {
         Log.e("tes intent", id)
 
         setupViewModel()
+        setupSession(uid)
         setupAction(id, name, uid)
+    }
+
+    private fun setupSession(id: String) {
+        detailViewModel.getSessions(token)
+        detailViewModel.sessions.observe(this) { sessions ->
+            for (x in sessions) {
+                if (x.userPlantID == id) {
+                    sessionId = x.id
+                }
+            }
+        }
     }
 
     private fun setupViewModel() {
@@ -68,6 +81,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         binding.delete.setOnClickListener{
+            detailViewModel.deleteSession(token, sessionId)
             detailViewModel.deleteUserPlants(token, uid)
 
             val intent = Intent(this, HomeActivity::class.java)

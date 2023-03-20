@@ -16,8 +16,8 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
-    RecyclerView.Adapter<UserPlantsAdapter.ViewHolder>() {
+class MovePlantAdapter(private val datas: List<UserPlantsResponseItem>) :
+    RecyclerView.Adapter<MovePlantAdapter.ViewHolder>() {
 
     companion object {
         const val ID = "id"
@@ -40,15 +40,7 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val (namaPenanda, plant, date, wateringState, dryState, humidState, id) = datas[position]
 
-        val dateNow = now().toDateStandardConcise()
-        val dateUserPlant = formatDate(date)
-
-//        Log.e("watering state", wateringState.toString())
-//        Log.e("date", (dateNow == date).toString())
-        if (wateringState && dateNow >= dateUserPlant) {
-            holder.binding.fabWater.visibility = View.VISIBLE
-            holder.binding.check.visibility = View.GONE
-        } else if (dryState && !wateringState) {
+        if (dryState && !wateringState) {
             holder.binding.check.visibility = View.GONE
             holder.binding.fabSun.visibility = View.VISIBLE
             holder.binding.fabCloud.visibility = View.GONE
@@ -80,13 +72,18 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
         }
 
         if (onClick != null) {
-            holder.binding.fabWater.setOnClickListener {
-                onClick!!.onItemClickWatering(
+            holder.binding.fabSun.setOnClickListener {
+                onClick!!.onItemClickMoving(
                     holder.binding.fabWater,
                     holder.adapterPosition,
-                    id,
-                    date,
-                    plant.durasiSiram
+                    id
+                )
+            }
+            holder.binding.fabCloud.setOnClickListener {
+                onClick!!.onItemClickMoving(
+                    holder.binding.fabWater,
+                    holder.adapterPosition,
+                    id
                 )
             }
         }
@@ -100,7 +97,7 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
     }
 
     interface OnItemClickListener {
-        fun onItemClickWatering(view: View, position: Int, id:String, date: String, duration: String)
+        fun onItemClickMoving(view: View, position: Int, userPlantID: String)
     }
 
     override fun getItemCount(): Int = datas.size

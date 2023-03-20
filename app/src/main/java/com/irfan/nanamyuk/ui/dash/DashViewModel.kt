@@ -8,6 +8,7 @@ import com.irfan.nanamyuk.data.api.ConfigApi.Companion.BASE_OWM
 import com.irfan.nanamyuk.data.api.ConfigApi.Companion.BASE_URL
 import com.irfan.nanamyuk.data.datastore.SessionModel
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
+import com.irfan.nanamyuk.ui.detail.DetailViewModel
 import com.irfan.nanamyuk.ui.pilih.PilihViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -23,6 +24,9 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
 
     private val _weather = MutableLiveData<WeatherResponse>()
     val weather: LiveData<WeatherResponse> = _weather
+
+    private val _sessions = MutableLiveData<List<SessionResponseItem>>()
+    val sessions: LiveData<List<SessionResponseItem>> = _sessions
 
     private val _session = MutableLiveData<SessionResponseItem>()
     val session: LiveData<SessionResponseItem> = _session
@@ -68,6 +72,28 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
         })
     }
 
+    fun getSessions(token: String){
+        _isLoading.value = true
+
+        val client = ConfigApi.getApiService(BASE_URL).getSessions("Bearer $token")
+        client.enqueue(object : Callback<SessionsResponse> {
+            override fun onResponse(call: Call<SessionsResponse>, response: Response<SessionsResponse>) {
+                _isLoading.value = false
+
+                if (response.isSuccessful) {
+                    //Log.e("fafifu", response.body().toString())
+                    _sessions.value = response.body()?.response
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+            override fun onFailure(call: Call<SessionsResponse>, t: Throwable) {
+                _isLoading.value = false
+                Log.e(TAG, "onFailure Throw: ${t.message}")
+            }
+        })
+    }
+
     fun getSession(id: String, token: String){
         _isLoading.value = true
 
@@ -87,6 +113,27 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
                 _isLoading.value = false
                 Log.e(TAG, "onFailure Throw: ${t.message}")
             }
+        })
+    }
+
+    fun updateSession(token: String, map : HashMap<String, Any>, id: String){
+        _state.value = false
+
+        val client = ConfigApi.getApiService(BASE_URL).updateSession("Bearer $token", id, map)
+        client.enqueue(object : Callback<SessionResponse> {
+            override fun onResponse(
+                call: Call<SessionResponse>,
+                response: Response<SessionResponse>
+            ) {
+                if (response.isSuccessful){
+                    _state.value = true
+                }
+            }
+
+            override fun onFailure(call: Call<SessionResponse>, t: Throwable) {
+                Log.e(TAG, "onFailure Throw: ${t.message}")
+            }
+
         })
     }
 

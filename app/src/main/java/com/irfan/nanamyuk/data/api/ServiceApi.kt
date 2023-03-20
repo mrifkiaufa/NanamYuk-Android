@@ -46,12 +46,18 @@ interface ServiceApi {
         @Body params: HashMap<String, Any>
     ) : Call<SessionResponse>
 
-    @POST("session/{id}")
+    @PATCH("session/{id}")
     fun updateSession(
         @Header("Authorization") header: String,
         @Path("id") id: String,
         @Body params: HashMap<String, Any>
     ) : Call<SessionResponse>
+
+    @DELETE("session/{id}")
+    fun deleteSession(
+        @Header("Authorization") header: String,
+        @Path("id") id: String
+    ): Call<SessionResponse>
 
     @GET("Plant")
     fun getPlant(

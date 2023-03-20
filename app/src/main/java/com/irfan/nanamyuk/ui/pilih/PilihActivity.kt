@@ -147,7 +147,7 @@ class PilihActivity : AppCompatActivity() {
                 namaPenanda = binding.tvPenanda.text.toString()
                 val user = it.id
                 val plantId = tanamanId
-                val wateringState = false
+                val wateringState = true
                 val dryState = false
                 val humidState = false
 

@@ -10,6 +10,35 @@
         android:layout_height="wrap_content"
         tools:context=".ui.dash.DashFragment">
 
+        <Button
+            android:id="@+id/add_button_home"
+            style="@style/text.title"
+            android:layout_height="40dp"
+            android:layout_marginEnd="271dp"
+            android:layout_marginBottom="16dp"
+            android:padding="24dp"
+            android:background="@drawable/button_next"
+            android:drawableStart="@drawable/ic_baseline_add_circle_24"
+            android:elevation="10dp"
+            android:text="@string/tambah_tanaman_home"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/tv_add_plant_home"
+            app:layout_constraintTop_toBottomOf="@+id/tv_add_plant_home" />
+
+        <TextView
+            android:id="@+id/tv_add_plant_home"
+            style="@style/text.header"
+            android:text="@string/ingin_menambahkan_tanaman_klik_tombol_di_bawah_ini"
+            android:textColor="@color/text_main"
+            app:layout_constraintBottom_toTopOf="@+id/tv_halo"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tv_halo"
             style="@style/text.medium"
@@ -38,7 +67,7 @@
             android:background="@color/bg_secondary"
             android:paddingHorizontal="8dp"
             android:layout_marginEnd="24dp"
-            android:text="Lihat Fitur Premium"
+            android:text="@string/lihat_fitur_premium"
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_date" />
@@ -53,7 +82,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_premium" />
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/animationView2"
+            android:id="@+id/animationView4"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginTop="8dp"
@@ -76,6 +105,41 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_status_no"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_need_move"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="150dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_status_move"/>
+
+        <TextView
+            android:id="@+id/tv_status_move"
+            style="@style/text.header"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/perlu_dipindahkan"
+            android:textColor="@color/text_main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_not_finish" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_status_yes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_status_move"
+            app:layout_constraintVertical_bias="0.122"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_url="https://assets4.lottiefiles.com/private_files/lf30_yo2zavgg.json" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animationView1"
@@ -107,7 +171,7 @@
         <TextView
             android:id="@+id/tv_no_plant"
             style="@style/text.header"
-            android:text="Tambah Tanaman Dahulu"
+            android:text="@string/tambah_tanaman_dahulu"
             android:textColor="@color/accent_main"
             android:layout_marginTop="-90dp"
             android:visibility="gone"
@@ -123,7 +187,7 @@
             android:layout_marginTop="24dp"
             android:textColor="@color/text_main"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_not_finish" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_need_move" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_finish"

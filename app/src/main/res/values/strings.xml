@@ -61,4 +61,9 @@
     <string name="penanda_msg_2">Misal, Bayam Halaman Belakang</string>
     <string name="chekclist">chekclist</string>
     <string name="time_splash">1500</string>
+    <string name="lihat_fitur_premium">Lihat Fitur Premium</string>
+    <string name="tambah_tanaman_dahulu">Tambah Tanaman Dahulu</string>
+    <string name="tambah_tanaman_home">Tambah tanaman</string>
+    <string name="ingin_menambahkan_tanaman_klik_tombol_di_bawah_ini">Ingin menambahkan tanaman? Klik tombol di bawah ini</string>
+    <string name="perlu_dipindahkan">Perlu dipindahkan</string>
 </resources>
