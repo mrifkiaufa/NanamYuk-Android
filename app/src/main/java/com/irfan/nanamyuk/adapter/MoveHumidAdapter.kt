@@ -9,14 +9,12 @@ import com.bumptech.glide.Glide
 import com.irfan.nanamyuk.data.api.UserPlantsResponseItem
 import com.irfan.nanamyuk.databinding.ItemStatusBinding
 import com.irfan.nanamyuk.ui.detail.DetailActivity
-import com.parassidhu.simpledate.toDateStandardConcise
-import me.moallemi.tools.extension.date.now
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
-    RecyclerView.Adapter<UserPlantsAdapter.ViewHolder>() {
+class MoveHumidAdapter(private val datas: List<UserPlantsResponseItem>) :
+    RecyclerView.Adapter<MoveHumidAdapter.ViewHolder>() {
 
     companion object {
         const val ID = "id"
@@ -37,16 +35,13 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (namaPenanda, plant, wateringDate, _, wateringState, _, _, id) = datas[position]
+        val (namaPenanda, plant, wateringDate, _, _, _, humidState, id) = datas[position]
 
-        val dateNow = now().toDateStandardConcise()
-        val dateUserPlant = formatDate(wateringDate)
-
-//        Log.e("watering state", wateringState.toString())
-//        Log.e("date", (dateNow == date).toString())
-        if (wateringState && dateNow >= dateUserPlant) {
-            holder.binding.fabWater.visibility = View.VISIBLE
+        if (humidState) {
             holder.binding.check.visibility = View.GONE
+            holder.binding.fabCloud.visibility = View.VISIBLE
+            holder.binding.fabSun.visibility = View.GONE
+            holder.binding.fabWater.visibility = View.GONE
         } else {
             holder.binding.fabWater.visibility = View.GONE
             holder.binding.check.visibility = View.VISIBLE
@@ -69,13 +64,11 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
         }
 
         if (onClick != null) {
-            holder.binding.fabWater.setOnClickListener {
-                onClick!!.onItemClickWatering(
-                    holder.binding.fabWater,
+            holder.binding.fabCloud.setOnClickListener {
+                onClick!!.onItemClickMoving(
+                    holder.binding.fabCloud,
                     holder.adapterPosition,
-                    id,
-                    wateringDate,
-                    plant.durasiSiram
+                    id
                 )
             }
         }
@@ -89,7 +82,7 @@ class UserPlantsAdapter(private val datas: List<UserPlantsResponseItem>) :
     }
 
     interface OnItemClickListener {
-        fun onItemClickWatering(view: View, position: Int, id:String, date: String, duration: String)
+        fun onItemClickMoving(view: View, position: Int, userPlantID: String)
     }
 
     override fun getItemCount(): Int = datas.size

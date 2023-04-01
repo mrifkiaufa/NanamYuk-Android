@@ -1,7 +1,6 @@
 package com.irfan.nanamyuk.adapter
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +9,12 @@ import com.bumptech.glide.Glide
 import com.irfan.nanamyuk.data.api.UserPlantsResponseItem
 import com.irfan.nanamyuk.databinding.ItemStatusBinding
 import com.irfan.nanamyuk.ui.detail.DetailActivity
-import com.parassidhu.simpledate.toDateStandardConcise
-import me.moallemi.tools.extension.date.now
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-class MovePlantAdapter(private val datas: List<UserPlantsResponseItem>) :
-    RecyclerView.Adapter<MovePlantAdapter.ViewHolder>() {
+class MoveDryAdapter(private val datas: List<UserPlantsResponseItem>) :
+    RecyclerView.Adapter<MoveDryAdapter.ViewHolder>() {
 
     companion object {
         const val ID = "id"
@@ -38,17 +35,12 @@ class MovePlantAdapter(private val datas: List<UserPlantsResponseItem>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val (namaPenanda, plant, date, wateringState, dryState, humidState, id) = datas[position]
+        val (namaPenanda, plant, wateringDate, _, _, dryState, _, id) = datas[position]
 
-        if (dryState && !wateringState) {
+        if (dryState) {
             holder.binding.check.visibility = View.GONE
             holder.binding.fabSun.visibility = View.VISIBLE
             holder.binding.fabCloud.visibility = View.GONE
-            holder.binding.fabWater.visibility = View.GONE
-        } else if (humidState && !wateringState) {
-            holder.binding.check.visibility = View.GONE
-            holder.binding.fabCloud.visibility = View.VISIBLE
-            holder.binding.fabSun.visibility = View.GONE
             holder.binding.fabWater.visibility = View.GONE
         } else {
             holder.binding.fabWater.visibility = View.GONE
@@ -61,7 +53,7 @@ class MovePlantAdapter(private val datas: List<UserPlantsResponseItem>) :
         holder.binding.tvPenanda.text = namaPenanda
         holder.binding.tvTanaman.text = plant.namaTanaman
 
-        holder.binding.tvDate.text = formatDate(date)
+        holder.binding.tvDate.text = formatDate(wateringDate)
 
         holder.binding.card.setOnClickListener {
             val i = Intent(holder.itemView.context, DetailActivity::class.java)
@@ -74,14 +66,7 @@ class MovePlantAdapter(private val datas: List<UserPlantsResponseItem>) :
         if (onClick != null) {
             holder.binding.fabSun.setOnClickListener {
                 onClick!!.onItemClickMoving(
-                    holder.binding.fabWater,
-                    holder.adapterPosition,
-                    id
-                )
-            }
-            holder.binding.fabCloud.setOnClickListener {
-                onClick!!.onItemClickMoving(
-                    holder.binding.fabWater,
+                    holder.binding.fabSun,
                     holder.adapterPosition,
                     id
                 )

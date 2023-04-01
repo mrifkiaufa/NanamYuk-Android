@@ -26,8 +26,11 @@ data class UserPlantsResponseItem(
 	@field:SerializedName("plant")
 	val plant: PlantItem,
 
-	@field:SerializedName("date")
-	val date: String,
+	@field:SerializedName("watering_date")
+	val wateringDate: String,
+
+	@field:SerializedName("move_date")
+	val moveDate: String,
 
 	@field:SerializedName("watering_state")
 	val wateringState: Boolean,
@@ -51,6 +54,12 @@ data class PlantItem(
 
 	@field:SerializedName("plant_name")
 	val namaTanaman: String,
+
+	@field:SerializedName("min_temperature")
+	val minTemp: String,
+
+	@field:SerializedName("max_temperature")
+	val maxTemp: String,
 
 	@field:SerializedName("watering_duration")
 	val durasiSiram: String,

@@ -19,6 +19,9 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
     private val _userplants = MutableLiveData<List<UserPlantsResponseItem>>()
     val userplants: LiveData<List<UserPlantsResponseItem>> = _userplants
 
+    private val _isPlantsEmpty = MutableLiveData<Boolean>()
+    val isPlantsEmpty: LiveData<Boolean> = _isPlantsEmpty
+
     private val _userPlant = MutableLiveData<UserPlantsResponseItem>()
     val userPlant: LiveData<UserPlantsResponseItem> = _userPlant
 
@@ -169,6 +172,9 @@ class DashViewModel(private val pref: SessionPreferences) : ViewModel() {
                 if (response.isSuccessful) {
                     if(!response.body()?.response.isNullOrEmpty()){
                         _userplants.value = response.body()?.response
+                        _isPlantsEmpty.value = false
+                    }else{
+                        _isPlantsEmpty.value = true
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")

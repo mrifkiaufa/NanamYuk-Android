@@ -152,7 +152,8 @@ class PilihActivity : AppCompatActivity() {
                 val humidState = false
 
                 val userPlantMap: HashMap<String, Any> = hashMapOf(
-                    "date" to setTanggal(),
+                    "watering_date" to setTanggal(),
+                    "move_date" to setTanggal(),
                     "tag_name" to namaPenanda,
                     "user_id" to user,
                     "plant_id" to plantId,
@@ -165,14 +166,6 @@ class PilihActivity : AppCompatActivity() {
                     if (namaPenanda.isNotEmpty() && tanamanId.isNotEmpty() && namaPenanda.isNotEmpty()){
                         //binding.nextButton.visibility  = View.INVISIBLE
                         pilihViewModel.postUserPlants(token, userPlantMap)
-                        pilihViewModel.userPlant.observe(this){ userPlant ->
-                            val sessionMap: HashMap<String, Any> = hashMapOf(
-                                "date" to " ",
-                                "user_plants_id" to userPlant.id
-                            )
-
-                            pilihViewModel.postSession(token, sessionMap)
-                        }
                         pilihViewModel.state.observe(this){ state ->
                             Log.e("nilai state", state.toString())
                             if (state) {
