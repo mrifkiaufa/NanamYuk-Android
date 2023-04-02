@@ -28,7 +28,7 @@ class LoginViewModel(private val pref: SessionPreferences) : ViewModel() {
         return pref.getToken().asLiveData()
     }
 
-    fun postLogin(map : HashMap<String, String>) {
+    fun postLogin(map : HashMap<String, String>, message: String = "") {
         _isLoading.value = true
         _state.value = false
 
@@ -50,7 +50,11 @@ class LoginViewModel(private val pref: SessionPreferences) : ViewModel() {
                     }
                 } else {
                     _state.value = false
-                    _message.value = "Email atau password yang anda masukkan salah"
+                    if (message != "") {
+                        _message.value = message
+                    } else {
+                        _message.value = "Email atau password yang anda masukkan salah"
+                    }
                 }
             }
 

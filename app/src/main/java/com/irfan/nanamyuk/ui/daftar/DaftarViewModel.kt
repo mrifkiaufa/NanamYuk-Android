@@ -17,13 +17,16 @@ class DaftarViewModel(private val pref: SessionPreferences) : ViewModel() {
     private val _login = MutableLiveData<AuthResponse>()
     val login : LiveData<AuthResponse> = _login
 
+    private val _message = MutableLiveData<String>()
+    val message: LiveData<String> = _message
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     private val _state = MutableLiveData<Boolean>()
     val state: LiveData<Boolean> = _state
 
-    fun postDaftar(map : HashMap<String, String>) {
+    fun postDaftar(map : HashMap<String, String>, message: String = "") {
         _isLoading.value = true
         _state.value = false
 
@@ -43,11 +46,19 @@ class DaftarViewModel(private val pref: SessionPreferences) : ViewModel() {
                             pref.login(token, name, id)
                         }
                     }
+                } else {
+                    _state.value = false
+                    if (message != "") {
+                        _message.value = message
+                    } else {
+                        _message.value = "Email sudah digunakan, silakan coba email lain."
+                    }
                 }
             }
 
             override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                 _state.value = false
+                _message.value = t.message
             }
         })
     }

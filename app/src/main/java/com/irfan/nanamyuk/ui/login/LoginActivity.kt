@@ -3,6 +3,7 @@ package com.irfan.nanamyuk.ui.login
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -58,7 +59,19 @@ class LoginActivity : AppCompatActivity() {
                 "password" to password
             )
 
-            loginViewModel.postLogin(map)
+            if (email.isEmpty() && password.isEmpty()) {
+                Toast.makeText(this, "Lengkapi form terlebih dahulu!", Toast.LENGTH_SHORT).show()
+            } else {
+                if (email == "") {
+                    loginViewModel.postLogin(map, "Email tidak boleh kosong")
+                }else if (password == "") {
+                    loginViewModel.postLogin(map, "Password tidak boleh kosong")
+                }else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+                    loginViewModel.postLogin(map, "Format email tidak sesuai")
+                } else {
+                    loginViewModel.postLogin(map)
+                }
+            }
 
             loginViewModel.state.observe(this) {
                 if (it) {

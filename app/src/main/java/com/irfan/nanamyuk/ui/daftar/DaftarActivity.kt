@@ -3,6 +3,7 @@ package com.irfan.nanamyuk.ui.daftar
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -58,8 +59,23 @@ class DaftarActivity : AppCompatActivity() {
                 "name" to name,
             )
 
-            daftarViewModel.postDaftar(map)
-
+            if (name.isEmpty() && email.isEmpty() && password.isEmpty()) {
+                Toast.makeText(this, "Lengkapi form terlebih dahulu!", Toast.LENGTH_SHORT).show()
+            } else {
+                if (name == "") {
+                    daftarViewModel.postDaftar(map, "Nama tidak boleh kosong")
+                }else if (email == "") {
+                    daftarViewModel.postDaftar(map, "Email tidak boleh kosong")
+                }else if (password == "") {
+                    daftarViewModel.postDaftar(map, "Password tidak boleh kosong")
+                }else if (password.length < 6) {
+                    daftarViewModel.postDaftar(map, "Password tidak boleh kurang dari 6 karakter")
+                }else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+                    daftarViewModel.postDaftar(map, "Format email tidak sesuai")
+                } else {
+                    daftarViewModel.postDaftar(map)
+                }
+            }
             daftarViewModel.state.observe(this) {
                 if (it) {
                     val intent = Intent(this, HomeActivity::class.java)
@@ -67,6 +83,10 @@ class DaftarActivity : AppCompatActivity() {
                     finish()
 
                     Toast.makeText(this, "Berhasil mendaftar akun!", Toast.LENGTH_SHORT).show()
+                } else {
+                    daftarViewModel.message.observe(this) { message ->
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

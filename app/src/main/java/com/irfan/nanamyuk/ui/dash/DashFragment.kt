@@ -1,8 +1,11 @@
 package com.irfan.nanamyuk.ui.dash
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -18,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.irfan.nanamyuk.HomeActivity
+import com.irfan.nanamyuk.R
 import com.irfan.nanamyuk.adapter.MoveDryAdapter
 import com.irfan.nanamyuk.adapter.MoveHumidAdapter
 import com.irfan.nanamyuk.adapter.UserPlantsAdapter
@@ -26,7 +32,6 @@ import com.irfan.nanamyuk.data.datastore.SessionPreferences
 import com.irfan.nanamyuk.databinding.FragmentDashboardBinding
 import com.irfan.nanamyuk.ui.ViewModelFactory
 import com.irfan.nanamyuk.ui.pilih.PilihActivity
-import com.irfan.nanamyuk.ui.subscription.SubscriptionActivity
 import com.parassidhu.simpledate.toDateStandardConcise
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
@@ -45,7 +50,7 @@ class DashFragment : Fragment() {
     private var _binding: FragmentDashboardBinding? = null
     private lateinit var dashViewModel: DashViewModel
     private var token = ""
-    private var temp = 0.0
+    private var temp = 27.0
 
     private val binding get() = _binding!!
 
@@ -84,13 +89,26 @@ class DashFragment : Fragment() {
             if (data.temperature.isNotEmpty()) {
                 temp = data.temperature.toDouble()
             }
-
+            Log.e("TEMP3", temp.toString())
         }
 
-        binding.btnPremium.visibility = GONE
-        binding.btnPremium.setOnClickListener {
-            val i = Intent(activity, SubscriptionActivity::class.java)
-            startActivity(i)
+//        binding.btnPremium.visibility = GONE
+//        binding.btnPremium.setOnClickListener {
+//            val i = Intent(activity, SubscriptionActivity::class.java)
+//            startActivity(i)
+//        }
+
+        binding.btnInfo.setOnClickListener {
+            val dialog = Dialog(requireContext())
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.setContentView(R.layout.info_dialog)
+
+            val btnClose = dialog.findViewById<ImageView>(R.id.btn_close)
+            btnClose.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
         }
 
         setupAction()

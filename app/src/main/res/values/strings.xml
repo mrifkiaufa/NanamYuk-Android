@@ -40,6 +40,7 @@
     <string name="lanjut">Lanjut</string>
     <string name="pilih_metode">Pilih Metode Tambah Tanaman</string>
     <string name="title_activity_tes">tes</string>
+    <string name="error_name">Nama tidak boleh kosong</string>
     <string name="error_email">Format Email Tidak Sesuai</string>
     <string name="error_password">Password minimal 6 karakter</string>
     <string name="login">Login</string>
@@ -66,4 +67,9 @@
     <string name="tambah_tanaman_home">Tambah tanaman</string>
     <string name="ingin_menambahkan_tanaman_klik_tombol_di_bawah_ini">Ingin menambahkan tanaman? Klik tombol di bawah ini</string>
     <string name="perlu_dipindahkan">Perlu dipindahkan</string>
+    <string name="informasi_tombol">Informasi tombol</string>
+    <string name="desc_water_btn">Ditekan saat sudah selesai menyiram \ntanamaman.</string>
+    <string name="desc_sun_btn">Ditekan jika tanaman perlu dipindahkan \nke tempat yang lebih cerah dan hangat.</string>
+    <string name="desc_cloud_btn">Ditekan jika tanaman perlu dipindahkan \nke tempat yang lebih teduh dan sejuk.</string>
+    <string name="desc_check_btn">Tanda bahwa tanaman telah selesai \ndisiram.</string>
 </resources>
