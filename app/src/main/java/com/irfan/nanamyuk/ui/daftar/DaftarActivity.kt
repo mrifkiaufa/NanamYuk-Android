@@ -61,6 +61,8 @@ class DaftarActivity : AppCompatActivity() {
 
             if (name.isEmpty() && email.isEmpty() && password.isEmpty()) {
                 Toast.makeText(this, "Lengkapi form terlebih dahulu!", Toast.LENGTH_SHORT).show()
+            } else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+                Toast.makeText(this, "Format email tidak sesuai", Toast.LENGTH_SHORT).show()
             } else {
                 if (name == "") {
                     daftarViewModel.postDaftar(map, "Nama tidak boleh kosong")
@@ -70,8 +72,6 @@ class DaftarActivity : AppCompatActivity() {
                     daftarViewModel.postDaftar(map, "Password tidak boleh kosong")
                 }else if (password.length < 6) {
                     daftarViewModel.postDaftar(map, "Password tidak boleh kurang dari 6 karakter")
-                }else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-                    daftarViewModel.postDaftar(map, "Format email tidak sesuai")
                 } else {
                     daftarViewModel.postDaftar(map)
                 }

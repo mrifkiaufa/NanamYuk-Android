@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ConfigApi {
     companion object {
 
-        var BASE_URL: String = "http://54.179.127.111:5000/"
+        var BASE_URL: String = "http://13.213.4.97:5000/"
         var BASE_ML: String = "http://129.150.57.39/flask/"
         var BASE_OWM: String = "https://api.openweathermap.org/data/2.5/"
 

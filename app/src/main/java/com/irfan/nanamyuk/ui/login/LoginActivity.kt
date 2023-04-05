@@ -61,13 +61,13 @@ class LoginActivity : AppCompatActivity() {
 
             if (email.isEmpty() && password.isEmpty()) {
                 Toast.makeText(this, "Lengkapi form terlebih dahulu!", Toast.LENGTH_SHORT).show()
+            } else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+                Toast.makeText(this, "Format email tidak sesuai", Toast.LENGTH_SHORT).show()
             } else {
                 if (email == "") {
                     loginViewModel.postLogin(map, "Email tidak boleh kosong")
-                }else if (password == "") {
+                } else if (password == "") {
                     loginViewModel.postLogin(map, "Password tidak boleh kosong")
-                }else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-                    loginViewModel.postLogin(map, "Format email tidak sesuai")
                 } else {
                     loginViewModel.postLogin(map)
                 }

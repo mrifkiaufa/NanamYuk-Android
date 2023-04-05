@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
@@ -83,20 +84,11 @@ class DashFragment : Fragment() {
                 var temp = kelvinToCelcius(weather.main.temp)
                 temp = (temp * 100.0).roundToInt() / 100.0
                 dashViewModel.setTemperature(temp.toString())
-                //Log.e("TEMP1", weather.toString())
             }
-            Log.e("TEMP2", data.toString())
             if (data.temperature.isNotEmpty()) {
                 temp = data.temperature.toDouble()
             }
-            Log.e("TEMP3", temp.toString())
         }
-
-//        binding.btnPremium.visibility = GONE
-//        binding.btnPremium.setOnClickListener {
-//            val i = Intent(activity, SubscriptionActivity::class.java)
-//            startActivity(i)
-//        }
 
         binding.btnInfo.setOnClickListener {
             val dialog = Dialog(requireContext())
@@ -112,7 +104,6 @@ class DashFragment : Fragment() {
         }
 
         setupAction()
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -142,104 +133,113 @@ class DashFragment : Fragment() {
             Log.e("DATE NEXT dateNow", now().toString())
 
             if(!UserPlants.isNullOrEmpty()) {
-                for (x in UserPlants) {
-                    dashViewModel.getUserPlant(token, x.id)
 
-                    val dateUserPlant = formatDate(x.wateringDate, "dd MMM yyyy")
-                    Log.e("plant date", dateUserPlant)
-                    Log.e("now date", dateNow)
-                    Log.e("now date", (dateNow >= dateUserPlant).toString())
-                    if (dateNow >= dateUserPlant) {
-                        val userPlantMap: HashMap<String, Any> = hashMapOf(
-                            "watering_date" to x.wateringDate,
-                            "move_date" to x.moveDate,
-                            "tag_name" to x.namaPenanda,
-                            "user_id" to x.user.id,
-                            "plant_id" to x.plant.id,
-                            "watering_state" to true,
-                            "dry_state" to x.dryState,
-                            "humid_state" to x.humidState
-                        )
+                dashViewModel.getUserToken().observe(viewLifecycleOwner) { user ->
+                    for (x in UserPlants) {
+                        if (x.user.id == user.id) {
+                            dashViewModel.getUserPlant(token, x.id)
 
-                        dashViewModel.updateUserPlants(token, userPlantMap, x.id)
-                    } else {
-                        val userPlantMap: HashMap<String, Any> = hashMapOf(
-                            "watering_date" to x.wateringDate,
-                            "move_date" to x.moveDate,
-                            "tag_name" to x.namaPenanda,
-                            "user_id" to x.user.id,
-                            "plant_id" to x.plant.id,
-                            "watering_state" to false,
-                            "dry_state" to x.dryState,
-                            "humid_state" to x.humidState
-                        )
-
-                        dashViewModel.updateUserPlants(token, userPlantMap, x.id)
-                    }
-
-                    dashViewModel.getPlant(token, x.plant.id)
-                    dashViewModel.plant.observe(viewLifecycleOwner) { plant ->
-                        if(plant.id == x.plant.id) {
-                            val minTemp = x.plant.minTemp.toDouble()
-                            val maxTemp = x.plant.maxTemp.toDouble()
-
-                            val dateSession = formatDate(x.moveDate, "dd MMM yyyy")
-                            if(temp in minTemp..maxTemp || dateNow < dateSession) {
+                            val dateUserPlant = formatDate(x.wateringDate, "dd MMM yyyy")
+                            Log.e("plant date", dateUserPlant)
+                            Log.e("now date", dateNow)
+                            Log.e("now date", (dateNow >= dateUserPlant).toString())
+                            if (dateNow >= dateUserPlant) {
                                 val userPlantMap: HashMap<String, Any> = hashMapOf(
                                     "watering_date" to x.wateringDate,
                                     "move_date" to x.moveDate,
                                     "tag_name" to x.namaPenanda,
                                     "user_id" to x.user.id,
                                     "plant_id" to x.plant.id,
-                                    "watering_state" to x.wateringState,
-                                    "dry_state" to false,
-                                    "humid_state" to false
+                                    "watering_state" to true,
+                                    "dry_state" to x.dryState,
+                                    "humid_state" to x.humidState
+                                )
+
+                                dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                            } else {
+                                val userPlantMap: HashMap<String, Any> = hashMapOf(
+                                    "watering_date" to x.wateringDate,
+                                    "move_date" to x.moveDate,
+                                    "tag_name" to x.namaPenanda,
+                                    "user_id" to x.user.id,
+                                    "plant_id" to x.plant.id,
+                                    "watering_state" to false,
+                                    "dry_state" to x.dryState,
+                                    "humid_state" to x.humidState
                                 )
 
                                 dashViewModel.updateUserPlants(token, userPlantMap, x.id)
                             }
-                             else {
-                                if(temp > maxTemp) {
-                                    val userPlantMap: HashMap<String, Any> = hashMapOf(
-                                        "watering_date" to x.wateringDate,
-                                        "move_date" to x.moveDate,
-                                        "tag_name" to x.namaPenanda,
-                                        "user_id" to x.user.id,
-                                        "plant_id" to x.plant.id,
-                                        "watering_state" to x.wateringState,
-                                        "dry_state" to false,
-                                        "humid_state" to true
-                                    )
 
-                                    dashViewModel.updateUserPlants(token, userPlantMap, x.id)
-                                } else if (temp < minTemp) {
-                                    val userPlantMap: HashMap<String, Any> = hashMapOf(
-                                        "watering_date" to x.wateringDate,
-                                        "move_date" to x.moveDate,
-                                        "tag_name" to x.namaPenanda,
-                                        "user_id" to x.user.id,
-                                        "plant_id" to x.plant.id,
-                                        "watering_state" to x.wateringState,
-                                        "dry_state" to true,
-                                        "humid_state" to false
-                                    )
+                            dashViewModel.getPlant(token, x.plant.id)
+                            dashViewModel.plant.observe(viewLifecycleOwner) { plant ->
+                                if(plant.id == x.plant.id) {
+                                    val minTemp = x.plant.minTemp.toDouble()
+                                    val maxTemp = x.plant.maxTemp.toDouble()
 
-                                    dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                    val dateSession = formatDate(x.moveDate, "dd MMM yyyy")
+                                    if(temp in minTemp..maxTemp || dateNow < dateSession) {
+                                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                                            "watering_date" to x.wateringDate,
+                                            "move_date" to x.moveDate,
+                                            "tag_name" to x.namaPenanda,
+                                            "user_id" to x.user.id,
+                                            "plant_id" to x.plant.id,
+                                            "watering_state" to x.wateringState,
+                                            "dry_state" to false,
+                                            "humid_state" to false
+                                        )
+
+                                        dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                    }
+                                    else {
+                                        if(temp > maxTemp) {
+                                            val userPlantMap: HashMap<String, Any> = hashMapOf(
+                                                "watering_date" to x.wateringDate,
+                                                "move_date" to x.moveDate,
+                                                "tag_name" to x.namaPenanda,
+                                                "user_id" to x.user.id,
+                                                "plant_id" to x.plant.id,
+                                                "watering_state" to x.wateringState,
+                                                "dry_state" to false,
+                                                "humid_state" to true
+                                            )
+
+                                            dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                        } else if (temp < minTemp) {
+                                            val userPlantMap: HashMap<String, Any> = hashMapOf(
+                                                "watering_date" to x.wateringDate,
+                                                "move_date" to x.moveDate,
+                                                "tag_name" to x.namaPenanda,
+                                                "user_id" to x.user.id,
+                                                "plant_id" to x.plant.id,
+                                                "watering_state" to x.wateringState,
+                                                "dry_state" to true,
+                                                "humid_state" to false
+                                            )
+
+                                            dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                for (i in UserPlants) {
-                    if(i.wateringState) {
-                        notFinish.add(i)
-                    } else if (i.dryState && !i.humidState) {
-                        needMoveDry.add(i)
-                    } else if (i.humidState && !i.dryState) {
-                        needMoveHumid.add(i)
-                    } else {
-                        finish.add(i)
+                dashViewModel.getUserToken().observe(viewLifecycleOwner) { user ->
+                    for (i in UserPlants) {
+                        if(i.user.id == user.id) {
+                            if(i.wateringState) {
+                                notFinish.add(i)
+                            } else if (i.dryState && !i.humidState) {
+                                needMoveDry.add(i)
+                            } else if (i.humidState && !i.dryState) {
+                                needMoveHumid.add(i)
+                            } else {
+                                finish.add(i)
+                            }
+                        }
                     }
                 }
             }
@@ -255,29 +255,34 @@ class DashFragment : Fragment() {
             if (needMoveDry.isNotEmpty() || needMoveHumid.isNotEmpty()) {
                 binding.animationView2.visibility = GONE
             }
-            if (needMoveDry.isEmpty() && needMoveHumid.isEmpty()) {
-                binding.rvNeedMoveHumid.visibility = GONE
-            }
+//            if (needMoveDry.isEmpty() && needMoveHumid.isEmpty()) {
+//                binding.rvNeedMoveHumid.visibility = GONE
+//                binding.rvNeedMoveDry.visibility = VISIBLE
+//            } else if (needMoveHumid.isNotEmpty() && needMoveHumid.isEmpty()) {
+//                binding.rvNeedMoveDry.visibility = GONE
+//                binding.rvNeedMoveHumid.visibility = VISIBLE
+//            }
             if (finish.isNotEmpty()) {
                 binding.animationView1.visibility = GONE
             }
-            if (UserPlants.isNullOrEmpty()){
-                binding.animationView3.visibility = View.VISIBLE
-//                binding.tvAddPlantHome.visibility = View.VISIBLE
-                binding.addButtonHome.visibility = View.VISIBLE
-                binding.tvNoPlant.visibility = View.VISIBLE
-                binding.rvNeedMoveHumid.visibility = GONE
-                binding.tvStatusNo.visibility = GONE
-                binding.tvStatusMove.visibility = GONE
-                binding.tvStatusYes.visibility = GONE
-                binding.animationView2.visibility = GONE
-                binding.animationView1.visibility = GONE
-                binding.animationView4.visibility = GONE
+            dashViewModel.isPlantsEmpty.observe(viewLifecycleOwner) {
+                if (it){
+                    binding.animationView3.visibility = VISIBLE
+                    binding.addButtonHome.visibility = VISIBLE
+                    binding.tvNoPlant.visibility = VISIBLE
+                    binding.rvNeedMoveHumid.visibility = GONE
+                    binding.tvStatusNo.visibility = GONE
+                    binding.tvStatusMove.visibility = GONE
+                    binding.tvStatusYes.visibility = GONE
+                    binding.animationView2.visibility = GONE
+                    binding.animationView1.visibility = GONE
+                    binding.animationView4.visibility = GONE
 
-                binding.addButtonHome.setOnClickListener {
-                    val intent = Intent(activity, PilihActivity::class.java)
-                    intent.putExtra("method", "pilih")
-                    startActivity(intent)
+                    binding.addButtonHome.setOnClickListener {
+                        val intent = Intent(activity, PilihActivity::class.java)
+                        intent.putExtra("method", "pilih")
+                        startActivity(intent)
+                    }
                 }
             }
 
