@@ -63,13 +63,13 @@
     <string name="chekclist">chekclist</string>
     <string name="time_splash">1500</string>
     <string name="lihat_fitur_premium">Lihat Fitur Premium</string>
-    <string name="tambah_tanaman_dahulu">Tambah Tanaman Dahulu</string>
+    <string name="tambah_tanaman_dahulu">Ingin menambah tanaman baru?</string>
     <string name="tambah_tanaman_home">Tambah tanaman</string>
     <string name="ingin_menambahkan_tanaman_klik_tombol_di_bawah_ini">Ingin menambahkan tanaman? Klik tombol di bawah ini</string>
     <string name="perlu_dipindahkan">Perlu dipindahkan</string>
     <string name="informasi_tombol">Informasi tombol</string>
-    <string name="desc_water_btn">Ditekan saat sudah selesai menyiram \ntanaman.</string>
-    <string name="desc_sun_btn">Ditekan jika tanaman perlu dipindahkan \nke tempat yang lebih cerah dan hangat.</string>
-    <string name="desc_cloud_btn">Ditekan jika tanaman perlu dipindahkan \nke tempat yang lebih teduh dan sejuk.</string>
-    <string name="desc_check_btn">Tanda bahwa tanaman telah selesai \ndisiram.</string>
+    <string name="desc_water_btn">Ditekan saat sudah selesai menyiram tanaman.</string>
+    <string name="desc_sun_btn">Ditekan jika tanaman perlu dipindahkan ke tempat yang lebih cerah dan hangat.</string>
+    <string name="desc_cloud_btn">Ditekan jika tanaman perlu dipindahkan ke tempat yang lebih teduh dan sejuk.</string>
+    <string name="desc_check_btn">Tanda bahwa tanaman telah selesai disiram.</string>
 </resources>

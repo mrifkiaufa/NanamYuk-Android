@@ -249,41 +249,59 @@ class DashFragment : Fragment() {
             val adapterNeedMoveHumid = MoveHumidAdapter(needMoveHumid)
             val adapterFinish = UserPlantsAdapter(finish)
 
+            Log.d("AUAUF1", notFinish.size.toString())
+            Log.d("AUAUF2", needMoveDry.size.toString())
+            Log.d("AUAUF3", needMoveHumid.size.toString())
+            Log.d("AUAUF4", finish.size.toString())
+
+            if (notFinish.size == 0 && needMoveDry.size == 0 && needMoveHumid.size == 0 && finish.size == 0) {
+                binding.animationView3.visibility = VISIBLE
+                binding.addButtonHome.visibility = VISIBLE
+                binding.tvNoPlant.visibility = VISIBLE
+                binding.rvNeedMoveHumid.visibility = GONE
+                binding.tvStatusNo.visibility = GONE
+                binding.tvStatusMove.visibility = GONE
+                binding.tvStatusYes.visibility = GONE
+                binding.animationView2.visibility = GONE
+                binding.animationView1.visibility = GONE
+                binding.animationView4.visibility = GONE
+
+                binding.addButtonHome.setOnClickListener {
+                    val intent = Intent(activity, PilihActivity::class.java)
+                    intent.putExtra("method", "pilih")
+                    startActivity(intent)
+                }
+            } else {
+                binding.animationView3.visibility = GONE
+                binding.addButtonHome.visibility = GONE
+                binding.tvNoPlant.visibility = GONE
+                binding.tvStatusNo.visibility = VISIBLE
+                binding.tvStatusMove.visibility = VISIBLE
+                binding.tvStatusYes.visibility = VISIBLE
+                binding.animationView2.visibility = VISIBLE
+                binding.animationView1.visibility = VISIBLE
+                binding.animationView4.visibility = VISIBLE
+            }
+
             if (notFinish.isNotEmpty()) {
                 binding.animationView4.visibility = GONE
             }
+
             if (needMoveDry.isNotEmpty() || needMoveHumid.isNotEmpty()) {
                 binding.animationView2.visibility = GONE
             }
-//            if (needMoveDry.isEmpty() && needMoveHumid.isEmpty()) {
-//                binding.rvNeedMoveHumid.visibility = GONE
-//                binding.rvNeedMoveDry.visibility = VISIBLE
-//            } else if (needMoveHumid.isNotEmpty() && needMoveHumid.isEmpty()) {
-//                binding.rvNeedMoveDry.visibility = GONE
-//                binding.rvNeedMoveHumid.visibility = VISIBLE
-//            }
+            if (needMoveDry.size == 0 && needMoveHumid.size == 0) {
+                binding.rvNeedMoveHumid.visibility = GONE
+                binding.rvNeedMoveDry.visibility = VISIBLE
+            } else if (needMoveHumid.size == 0) {
+                binding.rvNeedMoveDry.visibility = VISIBLE
+                binding.rvNeedMoveHumid.visibility = GONE
+            } else if (needMoveDry.size == 0) {
+                binding.rvNeedMoveDry.visibility = GONE
+                binding.rvNeedMoveHumid.visibility = VISIBLE
+            }
             if (finish.isNotEmpty()) {
                 binding.animationView1.visibility = GONE
-            }
-            dashViewModel.isPlantsEmpty.observe(viewLifecycleOwner) {
-                if (it){
-                    binding.animationView3.visibility = VISIBLE
-                    binding.addButtonHome.visibility = VISIBLE
-                    binding.tvNoPlant.visibility = VISIBLE
-                    binding.rvNeedMoveHumid.visibility = GONE
-                    binding.tvStatusNo.visibility = GONE
-                    binding.tvStatusMove.visibility = GONE
-                    binding.tvStatusYes.visibility = GONE
-                    binding.animationView2.visibility = GONE
-                    binding.animationView1.visibility = GONE
-                    binding.animationView4.visibility = GONE
-
-                    binding.addButtonHome.setOnClickListener {
-                        val intent = Intent(activity, PilihActivity::class.java)
-                        intent.putExtra("method", "pilih")
-                        startActivity(intent)
-                    }
-                }
             }
 
             if (UserPlants.isNotEmpty()) {
@@ -313,8 +331,10 @@ class DashFragment : Fragment() {
                 ) {
                     dashViewModel.getUserPlants(token)
                     dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
+                        var count = 0
                         for (x in userPlants) {
                             if (x.id == userPlantID) {
+                                count += 1
                                 val userPlantMap: HashMap<String, Any> = hashMapOf(
                                     "watering_date" to x.wateringDate,
                                     "move_date" to setTanggal(),
@@ -326,7 +346,9 @@ class DashFragment : Fragment() {
                                     "humid_state" to x.humidState
                                 )
 
-                                dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                if (count == 1) {
+                                    dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                }
                             }
                         }
                     }
@@ -344,8 +366,10 @@ class DashFragment : Fragment() {
                 ) {
                     dashViewModel.getUserPlants(token)
                     dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
+                        var count = 0
                         for (x in userPlants) {
                             if (x.id == userPlantID) {
+                                count += 1
                                 val userPlantMap: HashMap<String, Any> = hashMapOf(
                                     "watering_date" to x.wateringDate,
                                     "move_date" to setTanggal(),
@@ -357,7 +381,9 @@ class DashFragment : Fragment() {
                                     "humid_state" to false
                                 )
 
-                                dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                if (count == 1) {
+                                    dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                }
                             }
                         }
                     }
@@ -378,8 +404,10 @@ class DashFragment : Fragment() {
 
                     dashViewModel.getUserPlants(token)
                     dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
+                        var count = 0
                         for(x in userPlants) {
                             if (x.id == id) {
+                                count += 1
                                 val userPlantMap: HashMap<String, Any> = hashMapOf(
                                     "watering_date" to setTanggal(duration),
                                     "move_date" to x.moveDate,
@@ -391,7 +419,9 @@ class DashFragment : Fragment() {
                                     "humid_state" to x.humidState
                                 )
 
-                                dashViewModel.updateUserPlants(token, userPlantMap, id)
+                                if(count == 1) {
+                                    dashViewModel.updateUserPlants(token, userPlantMap, id)
+                                }
                             }
                         }
                     }
