@@ -72,4 +72,16 @@
     <string name="desc_sun_btn">Ditekan jika tanaman perlu dipindahkan ke tempat yang lebih cerah dan hangat.</string>
     <string name="desc_cloud_btn">Ditekan jika tanaman perlu dipindahkan ke tempat yang lebih teduh dan sejuk.</string>
     <string name="desc_check_btn">Tanda bahwa tanaman telah selesai disiram.</string>
+    <string name="logout_tittle">Keluar dari akun</string>
+    <string name="logout_supporting_text">Apakah anda yakin ingin keluar akun?</string>
+    <string name="delete_tittle">Hapus tanaman</string>
+    <string name="delete_supporting_text">Apakah anda yakin ingin menghapus tanaman?</string>
+    <string name="add_tittle">Tambah tanaman</string>
+    <string name="add_supporting_text">Apakah anda yakin ingin menambah tanaman?</string>
+    <string name="water_tittle">Konfirmasi penyiraman tanaman</string>
+    <string name="water_supporting_text">Apakah anda yakin ingin mengonfirmasi penyiraman tanaman?</string>
+    <string name="move_tittle">Konfirmasi pemindahan tanaman</string>
+    <string name="move_supporting_text">Apakah anda yakin ingin mengonfirmasi pemindahan tanaman?</string>
+    <string name="iya">Iya</string>
+    <string name="batal">Batal</string>
 </resources>

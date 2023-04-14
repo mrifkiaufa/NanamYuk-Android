@@ -64,14 +64,20 @@ class FormActivity : AppCompatActivity() {
             namaKota = binding.editTextKota.text.toString()
 
             pilihIntensitas()
-            if(namaTanah.isNotEmpty() and namaKota.isNotEmpty() and intensitasCahaya.isNotEmpty()) {
-                val intent = Intent(this, PilihActivity::class.java)
-                intent.putExtra("method", "rekomendasi")
-                intent.putExtra("kota", namaKota)
-                intent.putExtra("intensitas", intensitasCahaya)
-                intent.putExtra("idTanah", idTanah)
-                startActivity(intent)
-            } else if(namaKota.isEmpty()){
+            if(namaTanah.isNotEmpty() and namaKota.isNotBlank() and intensitasCahaya.isNotEmpty()) {
+                if (isNotLetters(namaKota)) {
+                    Toast.makeText(this, "Nama kota tidak boleh mengandung angka dan tanda baca", Toast.LENGTH_SHORT).show()
+                } else if (namaKota.length < 3) {
+                    Toast.makeText(this, "Kota tidak ditemukan :(", Toast.LENGTH_SHORT).show()
+                } else {
+                    val intent = Intent(this, PilihActivity::class.java)
+                    intent.putExtra("method", "rekomendasi")
+                    intent.putExtra("kota", namaKota)
+                    intent.putExtra("intensitas", intensitasCahaya)
+                    intent.putExtra("idTanah", idTanah)
+                    startActivity(intent)
+                }
+            } else if(namaKota.isBlank()){
                 Toast.makeText(this@FormActivity, "Silakan isi kota terlebih dahulu", Toast.LENGTH_SHORT).show()
             } else if(intensitasCahaya.isEmpty()){
                 Toast.makeText(this@FormActivity, "Silakan pilih intensitas cahaya terlebih dahulu", Toast.LENGTH_SHORT).show()
@@ -95,6 +101,11 @@ class FormActivity : AppCompatActivity() {
                 intensitasCahaya = "2"
             }
         }
+    }
+
+    private fun isNotLetters(string: String): Boolean {
+        val regex = Regex("[^A-Za-z ]|[0-9]")
+        return regex.containsMatchIn(string)
     }
 
     private val listTanah: ArrayList<Tanah>

@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.irfan.nanamyuk.ui.form.FormActivity
+import com.irfan.nanamyuk.R
 import com.irfan.nanamyuk.databinding.FragmentAddBinding
+import com.irfan.nanamyuk.ui.form.FormActivity
 import com.irfan.nanamyuk.ui.pilih.PilihActivity
 
 class AddFragment : Fragment() {
@@ -16,7 +16,6 @@ class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
 
     private val binding get() = _binding!!
-    private var addMethod = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,28 +29,22 @@ class AddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.nextButton.setOnClickListener {
-
-            val addMethodID = binding.rgMethod.checkedRadioButtonId
-
-            if(addMethodID != -1) {
-                addMethod = resources.getResourceEntryName(addMethodID)
-            }
-
-            when(addMethod){
-                "rbRecom" -> {
+        val onClickListener = View.OnClickListener { v ->
+            when (v.id) {
+                R.id.rbRecom -> {
                     val intent = Intent(activity, FormActivity::class.java)
                     startActivity(intent)
-                }"rbChoice" -> {
+                }
+                R.id.rbChoice -> {
                     val intent = Intent(activity, PilihActivity::class.java)
                     intent.putExtra("method", "pilih")
                     startActivity(intent)
-                }else -> {
-                    Toast.makeText(activity, "Silakan pilih dulu opsi yang tersedia", Toast.LENGTH_SHORT).show()
                 }
             }
-
         }
+
+        binding.rbRecom.setOnClickListener(onClickListener)
+        binding.rbChoice.setOnClickListener(onClickListener)
     }
 
     override fun onDestroyView() {

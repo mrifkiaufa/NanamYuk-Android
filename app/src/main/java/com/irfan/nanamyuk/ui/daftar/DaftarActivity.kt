@@ -64,14 +64,16 @@ class DaftarActivity : AppCompatActivity() {
             } else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
                 Toast.makeText(this, "Format email tidak sesuai", Toast.LENGTH_SHORT).show()
             } else {
-                if (name == "") {
-                    daftarViewModel.postDaftar(map, "Nama tidak boleh kosong")
-                }else if (email == "") {
-                    daftarViewModel.postDaftar(map, "Email tidak boleh kosong")
-                }else if (password == "") {
-                    daftarViewModel.postDaftar(map, "Password tidak boleh kosong")
+                if (name.isBlank()) {
+                    Toast.makeText(this, "Nama tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                }else if (email.isBlank()) {
+                    Toast.makeText(this, "Email tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                }else if (password.isBlank()) {
+                    Toast.makeText(this, "Password tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                }else if (isNotLetters(name)) {
+                    Toast.makeText(this, "Nama tidak boleh mengandung angka dan tanda baca", Toast.LENGTH_SHORT).show()
                 }else if (password.length < 6) {
-                    daftarViewModel.postDaftar(map, "Password tidak boleh kurang dari 6 karakter")
+                    Toast.makeText(this, "Password tidak boleh kurang dari 6 karakter", Toast.LENGTH_SHORT).show()
                 } else {
                     daftarViewModel.postDaftar(map)
                 }
@@ -92,6 +94,11 @@ class DaftarActivity : AppCompatActivity() {
         }
 
         daftarViewModel.isLoading.observe(this, ::showLoading)
+    }
+
+    private fun isNotLetters(string: String): Boolean {
+        val regex = Regex("[^A-Za-z ]|[0-9]")
+        return regex.containsMatchIn(string)
     }
 
     private fun showLoading(isLoading: Boolean) {

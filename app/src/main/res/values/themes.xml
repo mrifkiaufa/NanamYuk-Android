@@ -13,6 +13,7 @@
         <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name = "android:colorBackground">@color/bg_main</item>
+        <item name="colorSurface">@color/accent_secondary</item>
     </style>
 
     <style name="text">

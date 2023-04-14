@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RadioButton
+        <Button
             android:id="@+id/rbRecom"
             style="@style/text.header"
             android:layout_width="match_parent"
@@ -36,6 +36,8 @@
             android:minHeight="48dp"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
             android:text="@string/rekomendasi_tanaman" />
 
         <TextView
@@ -47,14 +49,7 @@
             android:text="@string/rekomendasi_tanaman_description"
             android:textColor="@color/text_secondary" />
 
-        <!--        <TextView-->
-        <!--            style="@style/text.description"-->
-        <!--            android:textColor="@color/text_main"-->
-        <!--            android:layout_marginVertical="8dp"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:text="@string/atau"/>-->
-
-        <RadioButton
+        <Button
             android:id="@+id/rbChoice"
             style="@style/text.header"
             android:layout_width="match_parent"
@@ -63,6 +58,8 @@
             android:minHeight="48dp"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
             android:text="@string/pilih_tanaman" />
 
         <TextView
@@ -71,24 +68,5 @@
             android:paddingHorizontal="16dp"
             android:text="@string/pilih_tanaman_description"
             android:textColor="@color/text_secondary" />
-
-
     </RadioGroup>
-
-    <Button
-        android:id="@+id/next_button"
-        style="@style/text.title"
-        android:layout_height="40dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="80dp"
-        android:background="@drawable/button_next"
-        android:drawableEnd="@drawable/ic_arrow"
-        android:paddingEnd="8dp"
-        android:text="@string/lanjut"
-        android:textAlignment="viewEnd"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="RtlSymmetry" />
 </androidx.constraintlayout.widget.ConstraintLayout>

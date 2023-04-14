@@ -14,7 +14,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.irfan.nanamyuk.HomeActivity
+import com.irfan.nanamyuk.R
 import com.irfan.nanamyuk.adapter.PilihAdapter
 import com.irfan.nanamyuk.data.api.PlantResponseItem
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
@@ -141,7 +143,6 @@ class PilihActivity : AppCompatActivity() {
         }
 
         binding.nextButton.setOnClickListener {
-
             pilihViewModel.getUserToken().observe(this) {
 
                 namaPenanda = binding.tvPenanda.text.toString()
@@ -163,29 +164,47 @@ class PilihActivity : AppCompatActivity() {
                 )
 
 
-                    if (namaPenanda.isNotEmpty() && tanamanId.isNotEmpty() && namaPenanda.isNotEmpty()){
+                if (namaPenanda.isNotEmpty() && tanamanId.isNotEmpty() && namaPenanda.isNotEmpty()){
+                    if (namaPenanda.isBlank()) {
+                        Toast.makeText(this, "Nama penanda tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                    } else if (checkPunctuation(namaPenanda)) {
+                        Toast.makeText(this, "Nama penanda tidak boleh mengandung tanda baca", Toast.LENGTH_SHORT).show()
+                    }else {
                         //binding.nextButton.visibility  = View.INVISIBLE
-                        pilihViewModel.postUserPlants(token, userPlantMap)
-                        pilihViewModel.state.observe(this){ state ->
-                            Log.e("nilai state", state.toString())
-                            if (state) {
-                                val intent = Intent(this, HomeActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(intent)
+                        MaterialAlertDialogBuilder(this)
+                            .setTitle(resources.getString(R.string.add_tittle))
+                            .setMessage(resources.getString(R.string.add_supporting_text))
+                            .setPositiveButton(resources.getString(R.string.iya)) { _, _ ->
+                                pilihViewModel.postUserPlants(token, userPlantMap)
+                                pilihViewModel.state.observe(this){ state ->
+                                    Log.e("nilai state", state.toString())
+                                    if (state) {
+                                        val intent = Intent(this, HomeActivity::class.java)
+                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        startActivity(intent)
+                                        Toast.makeText(this, "Berhasil menambah tanaman", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
                             }
-                        }
-                    } else if (namaPenanda.isEmpty()) {
-                        Toast.makeText(this, "Isi Nama Penanda Terlebih Dahulu", Toast.LENGTH_SHORT).show()
-                    } else if (tanamanId.isEmpty()) {
-                        Toast.makeText(this, "Pilih Tanaman Terlebih Dahulu", Toast.LENGTH_SHORT).show()
+                            .setNegativeButton(resources.getString(R.string.batal)) { _, _ ->
+                                Toast.makeText(this, "Batal menambah tanaman", Toast.LENGTH_SHORT).show()
+                            }
+                            .show()
                     }
+                } else if (namaPenanda.isEmpty()) {
+                    Toast.makeText(this, "Isi Nama Penanda Terlebih Dahulu", Toast.LENGTH_SHORT).show()
+                } else if (tanamanId.isEmpty()) {
+                    Toast.makeText(this, "Pilih Tanaman Terlebih Dahulu", Toast.LENGTH_SHORT).show()
+                }
 
             }
         }
-
-
     }
 
+    private fun checkPunctuation(string: String): Boolean {
+        val regex = Regex("[^A-Za-z0-9 ]")
+        return regex.containsMatchIn(string)
+    }
     private fun setTanggal(): String {
         return now().toZuluFormat()
     }

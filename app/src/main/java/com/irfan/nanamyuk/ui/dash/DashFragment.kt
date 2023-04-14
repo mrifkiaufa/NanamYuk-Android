@@ -16,6 +16,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -23,6 +24,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.irfan.nanamyuk.HomeActivity
 import com.irfan.nanamyuk.R
 import com.irfan.nanamyuk.adapter.MoveDryAdapter
@@ -329,32 +331,42 @@ class DashFragment : Fragment() {
                     position: Int,
                     userPlantID: String
                 ) {
-                    dashViewModel.getUserPlants(token)
-                    dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
-                        var count = 0
-                        for (x in userPlants) {
-                            if (x.id == userPlantID) {
-                                count += 1
-                                val userPlantMap: HashMap<String, Any> = hashMapOf(
-                                    "watering_date" to x.wateringDate,
-                                    "move_date" to setTanggal(),
-                                    "tag_name" to x.namaPenanda,
-                                    "user_id" to x.user.id,
-                                    "plant_id" to x.plant.id,
-                                    "watering_state" to x.wateringState,
-                                    "dry_state" to false,
-                                    "humid_state" to x.humidState
-                                )
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(resources.getString(R.string.move_tittle))
+                        .setMessage(resources.getString(R.string.move_supporting_text))
+                        .setPositiveButton(resources.getString(R.string.iya)) { _, _ ->
+                            dashViewModel.getUserPlants(token)
+                            dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
+                                var count = 0
+                                for (x in userPlants) {
+                                    if (x.id == userPlantID) {
+                                        count += 1
+                                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                                            "watering_date" to x.wateringDate,
+                                            "move_date" to setTanggal(),
+                                            "tag_name" to x.namaPenanda,
+                                            "user_id" to x.user.id,
+                                            "plant_id" to x.plant.id,
+                                            "watering_state" to x.wateringState,
+                                            "dry_state" to false,
+                                            "humid_state" to x.humidState
+                                        )
 
-                                if (count == 1) {
-                                    dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                        if (count == 1) {
+                                            dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                        }
+                                    }
                                 }
                             }
+                            val i = Intent(activity, HomeActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(i)
+                            Toast.makeText(activity, "Berhasil mengonfirmasi pemindahan", Toast.LENGTH_SHORT).show()
                         }
-                    }
-                    val i = Intent(activity, HomeActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(i)
+                        .setNegativeButton(resources.getString(R.string.batal)) { _, _ ->
+                            Toast.makeText(activity, "Batal konfirmasi pemindahan", Toast.LENGTH_SHORT).show()
+                        }
+                        .show()
                 }
             })
 
@@ -364,32 +376,42 @@ class DashFragment : Fragment() {
                     position: Int,
                     userPlantID: String
                 ) {
-                    dashViewModel.getUserPlants(token)
-                    dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
-                        var count = 0
-                        for (x in userPlants) {
-                            if (x.id == userPlantID) {
-                                count += 1
-                                val userPlantMap: HashMap<String, Any> = hashMapOf(
-                                    "watering_date" to x.wateringDate,
-                                    "move_date" to setTanggal(),
-                                    "tag_name" to x.namaPenanda,
-                                    "user_id" to x.user.id,
-                                    "plant_id" to x.plant.id,
-                                    "watering_state" to x.wateringState,
-                                    "dry_state" to x.dryState,
-                                    "humid_state" to false
-                                )
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(resources.getString(R.string.move_tittle))
+                        .setMessage(resources.getString(R.string.move_supporting_text))
+                        .setPositiveButton(resources.getString(R.string.iya)) { _, _ ->
+                            dashViewModel.getUserPlants(token)
+                            dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
+                                var count = 0
+                                for (x in userPlants) {
+                                    if (x.id == userPlantID) {
+                                        count += 1
+                                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                                            "watering_date" to x.wateringDate,
+                                            "move_date" to setTanggal(),
+                                            "tag_name" to x.namaPenanda,
+                                            "user_id" to x.user.id,
+                                            "plant_id" to x.plant.id,
+                                            "watering_state" to x.wateringState,
+                                            "dry_state" to x.dryState,
+                                            "humid_state" to false
+                                        )
 
-                                if (count == 1) {
-                                    dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                        if (count == 1) {
+                                            dashViewModel.updateUserPlants(token, userPlantMap, x.id)
+                                        }
+                                    }
                                 }
                             }
+                            val i = Intent(activity, HomeActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(i)
+                            Toast.makeText(activity, "Berhasil mengonfirmasi pemindahan", Toast.LENGTH_SHORT).show()
                         }
-                    }
-                    val i = Intent(activity, HomeActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(i)
+                        .setNegativeButton(resources.getString(R.string.batal)) { _, _ ->
+                            Toast.makeText(activity, "Batal konfirmasi pemindahan", Toast.LENGTH_SHORT).show()
+                        }
+                        .show()
                 }
             })
 
@@ -401,40 +423,49 @@ class DashFragment : Fragment() {
                     date: String,
                     duration: String
                 ) {
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(resources.getString(R.string.water_tittle))
+                        .setMessage(resources.getString(R.string.water_supporting_text))
+                        .setPositiveButton(resources.getString(R.string.iya)) { _, _ ->
+                            dashViewModel.getUserPlants(token)
+                            dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
+                                var count = 0
+                                for(x in userPlants) {
+                                    if (x.id == id) {
+                                        count += 1
+                                        val userPlantMap: HashMap<String, Any> = hashMapOf(
+                                            "watering_date" to setTanggal(duration),
+                                            "move_date" to x.moveDate,
+                                            "tag_name" to x.namaPenanda,
+                                            "user_id" to x.user.id,
+                                            "plant_id" to x.plant.id,
+                                            "watering_state" to false,
+                                            "dry_state" to x.dryState,
+                                            "humid_state" to x.humidState
+                                        )
 
-                    dashViewModel.getUserPlants(token)
-                    dashViewModel.userplants.observe(viewLifecycleOwner) { userPlants ->
-                        var count = 0
-                        for(x in userPlants) {
-                            if (x.id == id) {
-                                count += 1
-                                val userPlantMap: HashMap<String, Any> = hashMapOf(
-                                    "watering_date" to setTanggal(duration),
-                                    "move_date" to x.moveDate,
-                                    "tag_name" to x.namaPenanda,
-                                    "user_id" to x.user.id,
-                                    "plant_id" to x.plant.id,
-                                    "watering_state" to false,
-                                    "dry_state" to x.dryState,
-                                    "humid_state" to x.humidState
-                                )
-
-                                if(count == 1) {
-                                    dashViewModel.updateUserPlants(token, userPlantMap, id)
+                                        if(count == 1) {
+                                            dashViewModel.updateUserPlants(token, userPlantMap, id)
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
 
-                    val i = Intent(activity, HomeActivity::class.java)
-                    i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(i)
+                            val i = Intent(activity, HomeActivity::class.java)
+                            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(i)
+                            Toast.makeText(activity, "Berhasil mengonfirmasi penyiraman", Toast.LENGTH_SHORT).show()
+                        }
+                        .setNegativeButton(resources.getString(R.string.batal)) { _, _ ->
+                            Toast.makeText(activity, "Batal konfirmasi penyiraman", Toast.LENGTH_SHORT).show()
+                        }
+                        .show()
                 }
 
             })
         }
         dashViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progress.visibility = if (isLoading) View.VISIBLE else GONE
+            binding.progress.visibility = if (isLoading) VISIBLE else GONE
         }
     }
 

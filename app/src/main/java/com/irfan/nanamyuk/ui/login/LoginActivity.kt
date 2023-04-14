@@ -64,11 +64,11 @@ class LoginActivity : AppCompatActivity() {
             } else if (!(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
                 Toast.makeText(this, "Format email tidak sesuai", Toast.LENGTH_SHORT).show()
             } else {
-                if (email == "") {
-                    loginViewModel.postLogin(map, "Email tidak boleh kosong")
-                } else if (password == "") {
-                    loginViewModel.postLogin(map, "Password tidak boleh kosong")
-                } else {
+                if (email.isBlank()) {
+                    Toast.makeText(this, "Email tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                }else if (password.isBlank()) {
+                    Toast.makeText(this, "Password tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                }else {
                     loginViewModel.postLogin(map)
                 }
             }

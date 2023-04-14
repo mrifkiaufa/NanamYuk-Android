@@ -12,6 +12,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.irfan.nanamyuk.R
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
 import com.irfan.nanamyuk.databinding.FragmentSettingBinding
 import com.irfan.nanamyuk.ui.ViewModelFactory
@@ -41,21 +43,28 @@ class SettingFragment : Fragment() {
         settingViewModel = ViewModelProvider(this, ViewModelFactory(SessionPreferences.getInstance(requireContext().dataStore)))[SettingViewModel::class.java]
 
         binding.logout.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.logout_tittle))
+                .setMessage(resources.getString(R.string.logout_supporting_text))
+                .setPositiveButton(resources.getString(R.string.iya)) { _, _ ->
+                    settingViewModel.getUserToken().observe(viewLifecycleOwner) {
+                        settingViewModel.logout(it.token)
+                    }
 
-            settingViewModel.getUserToken().observe(viewLifecycleOwner) {
-                settingViewModel.logout(it.token)
-            }
+                    settingViewModel.state.observe(viewLifecycleOwner) {
+                        if (it){
+                            val intent = Intent(activity, LoginActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
 
-            settingViewModel.state.observe(viewLifecycleOwner) {
-                if (it){
-                    val intent = Intent(activity, LoginActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-
-                    Toast.makeText(activity, "Anda berhasil logout!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, "Anda berhasil keluar akun!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
-            }
-
+                .setNegativeButton(resources.getString(R.string.batal)) { _, _ ->
+                    Toast.makeText(activity, "Batal keluar akun", Toast.LENGTH_SHORT).show()
+                }
+                .show()
         }
     }
 

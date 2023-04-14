@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,37 +13,49 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:text="@string/title_setting"
-        android:textColor="@color/text_main" />
+        android:textColor="@color/text_main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="12dp"
         android:clickable="true"
         android:focusable="true"
-        android:layout_marginTop="36dp"
-        android:padding="16dp"
         android:foreground="?attr/selectableItemBackground"
         android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_tambah"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tambah"
         tools:ignore="UnusedAttribute">
 
         <TextView
             style="@style/text.header"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="8dp"
+            android:text="@string/logout"
             android:textColor="@color/text_main"
-            android:text="@string/logout"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_exit_to_app_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.divider.MaterialDivider
-            android:layout_marginStart="16dp"
+            android:id="@+id/materialDivider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minWidth="2dp"
             app:dividerColor="@color/stroke_main"
-            android:minWidth="2dp"/>
-
-    </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-</LinearLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

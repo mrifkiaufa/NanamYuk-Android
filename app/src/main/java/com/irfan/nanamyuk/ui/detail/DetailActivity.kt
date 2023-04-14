@@ -4,19 +4,23 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.irfan.nanamyuk.HomeActivity
+import com.irfan.nanamyuk.R
 import com.irfan.nanamyuk.adapter.UserPlantsAdapter.Companion.ID
 import com.irfan.nanamyuk.adapter.UserPlantsAdapter.Companion.NAME
 import com.irfan.nanamyuk.adapter.UserPlantsAdapter.Companion.UID
 import com.irfan.nanamyuk.data.datastore.SessionPreferences
 import com.irfan.nanamyuk.databinding.ActivityDetailBinding
 import com.irfan.nanamyuk.ui.ViewModelFactory
+import com.irfan.nanamyuk.ui.login.LoginActivity
 
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -81,13 +85,22 @@ class DetailActivity : AppCompatActivity() {
         }
 
         binding.delete.setOnClickListener{
-            detailViewModel.deleteSession(token, sessionId)
-            detailViewModel.deleteUserPlants(token, uid)
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.delete_tittle))
+                .setMessage(resources.getString(R.string.delete_supporting_text))
+                .setPositiveButton(resources.getString(R.string.iya)) { _, _ ->
+                    detailViewModel.deleteSession(token, sessionId)
+                    detailViewModel.deleteUserPlants(token, uid)
 
-            val intent = Intent(this, HomeActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    Toast.makeText(this, "Berhasil menghapus tanaman", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton(resources.getString(R.string.batal)) { _, _ ->
+                    Toast.makeText(this, "Batal menghapus tanaman", Toast.LENGTH_SHORT).show()
+                }
+                .show()
             }
         }
 }
